@@ -29,7 +29,7 @@ type LoginController() =
         |> System.Convert.ToBase64String
         |> (fun s -> "Basic " + s)
 
-    member x.Home() = 
+    member x.Index() = 
         x.View()
 
     member x.Auth(credentials: LoginCredentials) = async {        
