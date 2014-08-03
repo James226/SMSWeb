@@ -29,10 +29,10 @@ type LoginController() =
         |> System.Convert.ToBase64String
         |> (fun s -> "Basic " + s)
 
-    member this.Home() = 
-        this.View()
+    member x.Home() = 
+        x.View()
 
-    member this.Auth(credentials: LoginCredentials) = async {        
+    member x.Auth(credentials: LoginCredentials) = async {        
         try
             let auth = GetBasicHeader credentials
             let! html = Http.AsyncRequestString("http://api.dev.esendex.com/v1.0/accounts", headers = [ Authorization auth ])
