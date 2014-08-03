@@ -456,6 +456,7 @@
     </Compile>
     <None Include="packages.config" />
     <Content Include="readme.txt" />
+    <None Include="sms-web.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
