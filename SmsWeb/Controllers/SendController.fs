@@ -6,12 +6,20 @@ open System.Linq
 open System.Web
 open System.Web.Mvc
 open System.Web.Mvc.Ajax
-open SmsWeb.Models
 open FSharp.Data
 open FSharp.Data.HttpRequestHeaders
 open Newtonsoft.Json
 open System.Xml.Serialization
 open System.IO
+
+[<CLIMutable>]
+type SendMessage = {
+    AccountReference: string
+    From: string
+    To: string
+    Body: string
+}
+
 
 [<CLIMutable>]
 type Endpoint = {

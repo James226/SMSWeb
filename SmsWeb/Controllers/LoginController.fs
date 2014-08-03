@@ -6,10 +6,19 @@ open System.Linq
 open System.Web
 open System.Web.Mvc
 open System.Web.Mvc.Ajax
-open SmsWeb.Models
 open FSharp.Data
 open FSharp.Data.HttpRequestHeaders
 open Newtonsoft.Json
+
+[<CLIMutable>]
+type LoginCredentials = {
+    Username: string
+    Password: string
+}
+
+type LoginResult = {
+    Success: bool
+}
 
 type LoginController() =
     inherit AsyncWorkflowController()
