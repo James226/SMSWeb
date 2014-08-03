@@ -1,0 +1,7 @@
+c:\Users\James\documents\visual studio 2013\Projects\SmsWeb\SmsWeb.Models\bin\Debug\SmsWeb.Models.XML
+c:\Users\James\documents\visual studio 2013\Projects\SmsWeb\SmsWeb.Models\bin\Debug\SmsWeb.Models.dll
+c:\Users\James\documents\visual studio 2013\Projects\SmsWeb\SmsWeb.Models\bin\Debug\SmsWeb.Models.pdb
+c:\Users\James\documents\visual studio 2013\Projects\SmsWeb\SmsWeb.Models\bin\Debug\FSharp.Core.dll
+c:\Users\James\documents\visual studio 2013\Projects\SmsWeb\SmsWeb.Models\bin\Debug\FSharp.Core.xml
+c:\Users\James\documents\visual studio 2013\Projects\SmsWeb\SmsWeb.Models\obj\Debug\SmsWeb.Models.dll
+c:\Users\James\documents\visual studio 2013\Projects\SmsWeb\SmsWeb.Models\obj\Debug\SmsWeb.Models.pdb

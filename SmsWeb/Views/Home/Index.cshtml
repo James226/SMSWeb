@@ -1,0 +1,137 @@
+<style>
+.slide{
+  right:0;
+}
+.slide.ng-enter{
+  transition:0.5s linear all;
+  position:fixed;
+  z-index:inherit;
+  right:-100%;
+  height:inherit;
+}
+.slide.ng-leave{
+  transition:0.5s linear all;
+  position:fixed;
+  z-index:9999;
+  left:0;
+}
+.slide.ng-leave-active{
+  transition:0.5s linear all;
+  position:fixed;
+  left:-100%;
+  right:100%;
+}
+.slide.ng-enter-active{
+  transition:0.5s linear all;
+  right:0;
+  position:relative;
+}
+</style>
+
+ @section scripts {
+    <script type="text/javascript">
+        var smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']);
+
+        // configure our routes
+        smsApp.config(function($routeProvider) {
+            $routeProvider
+
+                .when('/', {
+                    templateUrl: 'Home/Home',
+                    controller: 'mainController'
+                })
+                .when('/login', {
+                    templateUrl: 'Login/Home',
+                    controller: 'loginController'
+                })
+
+                .when('/send', {
+                    templateUrl: 'Send',
+                    controller: 'sendController'
+                })
+
+                .when('/inbox', {
+                    templateUrl: 'Inbox',
+                    controller: 'inboxController'
+                });
+        });
+
+        // create the controller and inject Angular's $scope
+        smsApp.controller('mainController', function($scope) {
+            // create a message to display in our view
+            $scope.message = 'Everyone come and see how good I look!';
+        });
+
+        smsApp.controller('loginController', function($scope, $http) {
+            $scope.credentials = {
+                username: $('#username').val(),
+                password: $('#password').val()
+            };
+
+            $scope.processLogin = function() {
+                $http({
+                        method: 'POST',
+                        url: '@Url.Action("Auth", "Login")',
+                        data: $scope.credentials,
+                        headers: { 'Content-Type': 'application/json' }
+                    })
+                    .success(function(data) {
+                        if (data.Success) {
+                            window.location.href = '/';
+                        }
+                    });
+            };
+        });
+
+        smsApp.controller('sendController', [
+            '$scope', '$http', '$location', 'accountDetailsFactory', function($scope, $http, $location, details) {
+                $scope.accounts = [];
+
+                $scope.message = {
+                accountreference: '',
+                    from: '',
+                    to: '',
+                    body: ''
+                };
+
+                $scope.sendMessage = function() {
+                    $http.post('Send/Send', $scope.message)
+                        .success(function(data) {
+                            $location.path('/');
+                        });
+                }
+
+                details.success(function(data) {
+                    for (var i in data.Accounts) {
+                        $scope.accounts.push(data.Accounts[i]);
+                    }
+                    console.log(data);
+                });
+            }
+        ]);
+
+        smsApp.controller('inboxController', ['$scope', 'inboxService', function ($scope, inbox) {
+            console.log(inbox);
+            $scope.message = "Message: " + inbox.count;
+        }]);
+
+        smsApp.factory("accountDetailsFactory", function($http) {
+            return $http.get('Account/Details', { cache: true });
+        });
+
+        smsApp.service('inboxService', function ($http) {
+            var self = this;
+            this.messages = [];
+
+            $http.get('Inbox/Messages')
+                .success(function(data) {
+                    self.messages = data;
+                });
+        });
+    </script>
+}
+
+<div id="main">
+    <div ng-view class="slide"></div>
+</div>
+

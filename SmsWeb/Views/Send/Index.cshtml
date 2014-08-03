@@ -1,0 +1,40 @@
+﻿@{
+    Layout = null;
+}
+
+<div>
+    <h1 class="page-header">Send Message</h1>
+
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <form data-ng-submit="sendMessage()">
+                <div class="form-group">
+                    <label for="accountref">Account</label>
+                    <select name="accountref" class="form-control" data-ng-model="message.accountreference">
+                        <option data-ng-repeat="account in accounts">{{ account.Reference }}</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="from">From</label>
+                    <input type="text" name="from" class="form-control" data-ng-model="message.from" />
+                </div>
+
+                <div class="form-group">
+                    <label for="to">To</label>
+                    <input type="text" name="to" class="form-control" data-ng-model="message.to" />
+                </div>
+
+                <div class="form-group">
+                    <label for="body">Message</label>
+                    <textarea name="body" class="form-control" data-ng-model="message.body"></textarea>
+                </div>
+
+                <button type="submit" class="btn btn-success">
+                    Send
+                </button>
+
+            </form>
+        </div>
+    </div>
+</div>
