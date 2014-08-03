@@ -7,7 +7,17 @@
 <h1 class="page-header">Login</h1>
 
 <form data-ng-submit="processLogin()">
-    @Html.EditorForModel()
+    <div class="form-group">
+        @Html.LabelFor(m => m.Username)
+        @Html.TextBoxFor(m => m.Username, new { @class = "form-control", data_ng_model = "credentials.username" })
+        <span class="help-block"></span>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.Password)
+        @Html.PasswordFor(m => m.Password, new { @class = "form-control", data_ng_model = "credentials.password" })
+        <span class="help-block"></span>
+    </div>
 
     <button type="submit" class="btn btn-success">
         <span class="glyphicon glyphicon-flash btn-block"></span> Submit!
