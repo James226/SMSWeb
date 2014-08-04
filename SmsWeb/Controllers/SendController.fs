@@ -11,6 +11,7 @@ open FSharp.Data.HttpRequestHeaders
 open Newtonsoft.Json
 open System.Xml.Serialization
 open System.IO
+open SmsWeb.Models
 
 [<CLIMutable>]
 type SendMessage = {

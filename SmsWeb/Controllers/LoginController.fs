@@ -9,16 +9,7 @@ open System.Web.Mvc.Ajax
 open FSharp.Data
 open FSharp.Data.HttpRequestHeaders
 open Newtonsoft.Json
-
-[<CLIMutable>]
-type LoginCredentials = {
-    Username: string
-    Password: string
-}
-
-type LoginResult = {
-    Success: bool
-}
+open SmsWeb.Models
 
 type LoginController() =
     inherit AsyncWorkflowController()

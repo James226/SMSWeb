@@ -5,3 +5,10 @@ C:\Users\James\Documents\Visual Studio 2013\Projects\SmsWeb\SmsWeb.Models\bin\De
 C:\Users\James\Documents\Visual Studio 2013\Projects\SmsWeb\SmsWeb.Models\bin\Debug\FSharp.Core.xml
 C:\Users\James\Documents\Visual Studio 2013\Projects\SmsWeb\SmsWeb.Models\obj\Debug\SmsWeb.Models.dll
 C:\Users\James\Documents\Visual Studio 2013\Projects\SmsWeb\SmsWeb.Models\obj\Debug\SmsWeb.Models.pdb
+c:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\SmsWeb.Models.XML
+c:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\SmsWeb.Models.dll
+c:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\SmsWeb.Models.pdb
+c:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\FSharp.Core.dll
+c:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\FSharp.Core.xml
+c:\dev\_spikes\smsweb\SmsWeb.Models\obj\Debug\SmsWeb.Models.dll
+c:\dev\_spikes\smsweb\SmsWeb.Models\obj\Debug\SmsWeb.Models.pdb
