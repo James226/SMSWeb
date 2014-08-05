@@ -111,8 +111,14 @@
         ]);
 
         smsApp.controller('inboxController', ['$scope', 'inboxService', function ($scope, inbox) {
-            console.log(inbox);
-            $scope.message = "Message: " + inbox.messages.count;
+            inbox.then(function (data) {
+                console.log(data);
+                $scope.messages = data.data;
+            });
+
+            $scope.transformDate = function (dateString) {
+                return new Date(dateString.substring(0, dateString.indexOf('.')) + dateString.substring(dateString.length - 1)).toLocaleString();
+            };
         }]);
 
         smsApp.factory("accountDetailsFactory", function($http) {
@@ -120,13 +126,7 @@
         });
 
         smsApp.service('inboxService', function ($http) {
-            var self = this;
-            this.messages = [];
-
-            $http.get('Inbox/Messages')
-                .success(function(data) {
-                    self.messages = data;
-                });
+            return $http.get('Inbox/Messages');
         });
     </script>
 }

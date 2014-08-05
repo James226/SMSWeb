@@ -4,4 +4,21 @@
 
 <h1 class="page-header">Inbox</h1>
 
-{{ message }}
+<table class="table table-striped table-hover">
+    <thead>
+        <tr>
+            <th>Received</th>
+            <th>Summary</th>
+            <th>From</th>
+            <th>Reference</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr data-ng-repeat="message in messages">
+            <td>{{ transformDate(message.ReceivedAt) }}</td>
+            <td>{{ message.Summary }}</td>
+            <td>{{ message.From.PhoneNumber }}</td>
+            <td>{{ message.Reference }}</td>
+        </tr>
+    </tbody>
+</table>
