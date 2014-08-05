@@ -30,6 +30,6 @@ type InboxController() =
         let! http = Http.AsyncRequestStream("http://api.dev.esendex.com/v1.0/inbox/messages", headers = [ Authorization( GetBasicHeader(credentials)) ])
         let mdrSerializer = XmlSerializer(typeof<MessageHeaders>)
         let response = mdrSerializer.Deserialize http.ResponseStream :?> MessageHeaders
-        return JsonResult(Data = response.MessageHeader, JsonRequestBehavior = JsonRequestBehavior.AllowGet)
+        return JsonResult(Data = response.MessageHeader, JsonRequestBehavior = JsonRequestBehavior.AllowGet) :> ActionResult
     }
     

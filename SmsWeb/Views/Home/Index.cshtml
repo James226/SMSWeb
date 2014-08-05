@@ -112,7 +112,7 @@
 
         smsApp.controller('inboxController', ['$scope', 'inboxService', function ($scope, inbox) {
             console.log(inbox);
-            $scope.message = "Message: " + inbox.count;
+            $scope.message = "Message: " + inbox.messages.count;
         }]);
 
         smsApp.factory("accountDetailsFactory", function($http) {

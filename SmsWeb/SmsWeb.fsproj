@@ -433,7 +433,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Compile Include="Controllers\AsyncWorkflowController.fs" />
     <Compile Include="Controllers\HomeController.fs" />
-    <Compile Include="Controllers\ValuesController.fs" />
     <Compile Include="Controllers\LoginController.fs" />
     <Compile Include="Controllers\SendController.fs" />
     <Compile Include="Controllers\AccountController.fs" />
