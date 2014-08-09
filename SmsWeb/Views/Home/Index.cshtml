@@ -60,7 +60,6 @@ body {
     
     background-attachment: fixed;
     background-size: auto 100%;
-    background-position-y: 50px;
     background-position-x: 100%;
 }
 
@@ -79,17 +78,15 @@ body {
          };
          var w = window.innerWidth;
          var h = window.innerHeight;
-         //$('body').css('background-size', w + 'px ' + h + 'px');
 
          var smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route) {
              $rootScope.$on('$routeChangeStart', function(event, next, current) {
 
                  if (current !== undefined) {
                      var pos = routes[next['$$route'].controller];
-                     console.log(next['$$route'].controller);
-                     console.log(pos + '0%');
+
                      $('body').animate({
-                         'background-position-x': pos + '%'
+                         'background-position': pos + '%'
                      }, 500, 'linear');
                  }
 
