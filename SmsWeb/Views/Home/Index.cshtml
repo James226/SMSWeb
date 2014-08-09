@@ -73,9 +73,9 @@ body {
  @section scripts {
      <script type="text/javascript">
          var routes = {
-             'mainController': 0,
-             'sendController': 1,
-             'inboxController': 2
+             'mainController': 50,
+             'sendController': 25,
+             'inboxController': 0
          };
          var w = window.innerWidth;
          var h = window.innerHeight;
@@ -89,11 +89,11 @@ body {
                      console.log(next['$$route'].controller);
                      console.log(pos + '0%');
                      $('body').animate({
-                         'background-position-x': (((2 - pos) * 1000) - 4000) + 'px'
+                         'background-position-x': pos + '%'
                      }, 500, 'linear');
                  }
 
-                 if (current === undefined || routes[next['$$route'].controller] > routes[current['$$route'].controller]) {
+                 if (current === undefined || routes[next['$$route'].controller] < routes[current['$$route'].controller]) {
                      $('#main').addClass('left-slide');
                      $('#main').removeClass('right-slide');
                  } else {
