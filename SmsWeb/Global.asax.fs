@@ -7,6 +7,7 @@ open System.Web.Http
 open System.Web.Mvc
 open System.Web.Routing
 open System.Web.Optimization
+open Microsoft.AspNet.SignalR
 
 type BundleConfig() =
     static member RegisterBundles (bundles:BundleCollection) =
@@ -41,9 +42,9 @@ type Global() =
         // Configure routing
         config.MapHttpAttributeRoutes()
         config.Routes.MapHttpRoute(
-            "DefaultApi", // Route name
-            "api/{controller}/{id}", // URL with parameters
-            { controller = "{controller}"; id = RouteParameter.Optional } // Parameter defaults
+            "DefaultApi",
+            "api/{controller}/{id}",
+            { controller = "{controller}"; id = RouteParameter.Optional }
         ) |> ignore
 
         // Configure serialization

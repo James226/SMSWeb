@@ -10,7 +10,9 @@ open System.Web.Mvc.Ajax
 open System.Xml.Serialization
 open FSharp.Data
 open FSharp.Data.HttpRequestHeaders
+open EkonBenefits.FSharp.Dynamic
 open Newtonsoft.Json
+open Microsoft.AspNet.SignalR
 open SmsWeb.Models
 
 type InboxController() =
@@ -33,3 +35,17 @@ type InboxController() =
         return JsonResult(Data = response.MessageHeader, JsonRequestBehavior = JsonRequestBehavior.AllowGet) :> ActionResult
     }
     
+
+
+type InboxHub() =
+    inherit Hub()
+
+    member x.Send(text) =
+        printfn "Message Received: %s" text
+
+type TestController() =
+    inherit ApiControllerWithHub<InboxHub>()
+
+    member x.Get() =
+        x.Hub.Clients.All?DoStuff()
+        "Done2"

@@ -18,7 +18,3 @@ type HomeController() =
             this.View() :> ActionResult
         else
             ContentResult(Content = "<script>window.location.href = '/#/login';</script>") :> ActionResult
-
-
-    member this.About() =
-        this.View()

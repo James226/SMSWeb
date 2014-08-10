@@ -69,15 +69,16 @@ body {
 
 </style>
 
- @section scripts {
+@section scripts {
+    @Scripts.Render("~/scripts/jquery.signalr-2.1.1.min.js")
+    @Scripts.Render("~/signalr/hubs")
+
      <script type="text/javascript">
          var routes = {
              'mainController': 100,
              'sendController': 75,
              'inboxController': 50
          };
-         var w = window.innerWidth;
-         var h = window.innerHeight;
 
          var smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route) {
              $rootScope.$on('$routeChangeStart', function(event, next, current) {
@@ -100,7 +101,6 @@ body {
              });
          });
 
-         // configure our routes
          smsApp.config(function($routeProvider) {
              $routeProvider
                  .when('/', {
@@ -121,9 +121,7 @@ body {
                  });
          });
 
-         // create the controller and inject Angular's $scope
          smsApp.controller('mainController', function($scope) {
-             // create a message to display in our view
              $scope.message = 'Everyone come and see how good I look!';
          });
 
@@ -185,6 +183,16 @@ body {
                  $scope.transformDate = function(dateString) {
                      return new Date(dateString.substring(0, dateString.indexOf('.')) + dateString.substring(dateString.length - 1)).toLocaleString();
                  };
+
+                 var inboxHub = $.connection.inboxHub;
+
+                 inboxHub.client.doStuff = function () {
+                     console.log("Do Stuff!!");
+                 };
+
+                 $.connection.hub.start().done(function () {
+                     inboxHub.server.send("Test");
+                 });
              }
          ]);
 
