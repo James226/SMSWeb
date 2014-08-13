@@ -72,138 +72,16 @@ body {
 @section scripts {
     @Scripts.Render("~/scripts/jquery.signalr-2.1.1.min.js")
     @Scripts.Render("~/signalr/hubs")
+    @Scripts.Render("~/scripts/smsweb/smsapp.js")
+    @Scripts.Render("~/scripts/smsweb/config.js")
+    @Scripts.Render("~/scripts/smsweb/controllers/homecontroller.js")
+    @Scripts.Render("~/scripts/smsweb/controllers/logincontroller.js")
+    @Scripts.Render("~/scripts/smsweb/controllers/sendcontroller.js")
+    @Scripts.Render("~/scripts/smsweb/controllers/inboxcontroller.js")
+    @Scripts.Render("~/scripts/smsweb/services/inboxservice.js")
+    @Scripts.Render("~/scripts/smsweb/factories/accountdetailsfactory.js")
 
-     <script type="text/javascript">
-         var routes = {
-             'mainController': 100,
-             'sendController': 75,
-             'inboxController': 50
-         };
 
-         var smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route) {
-             $rootScope.$on('$routeChangeStart', function(event, next, current) {
-
-                 if (current !== undefined) {
-                     var pos = routes[next['$$route'].controller];
-
-                     $('body').animate({
-                         'background-position': pos + '%'
-                     }, 500, 'linear');
-                 }
-
-                 if (current === undefined || routes[next['$$route'].controller] < routes[current['$$route'].controller]) {
-                     $('#main').addClass('left-slide');
-                     $('#main').removeClass('right-slide');
-                 } else {
-                     $('#main').addClass('right-slide');
-                     $('#main').removeClass('left-slide');
-                 }
-             });
-         });
-
-         smsApp.config(function($routeProvider) {
-             $routeProvider
-                 .when('/', {
-                     templateUrl: 'Home/Home',
-                     controller: 'mainController'
-                 })
-                 .when('/login', {
-                     templateUrl: 'Login',
-                     controller: 'loginController'
-                 })
-                 .when('/send', {
-                     templateUrl: 'Send',
-                     controller: 'sendController'
-                 })
-                 .when('/inbox', {
-                     templateUrl: 'Inbox',
-                     controller: 'inboxController'
-                 });
-         });
-
-         smsApp.controller('mainController', function($scope) {
-             $scope.message = 'Everyone come and see how good I look!';
-         });
-
-         smsApp.controller('loginController', function($scope, $http) {
-             $scope.credentials = {
-                 username: $('#username').val(),
-                 password: $('#password').val()
-             };
-
-             $scope.processLogin = function() {
-                 $http({
-                         method: 'POST',
-                         url: '@Url.Action("Auth", "Login")',
-                         data: $scope.credentials,
-                         headers: { 'Content-Type': 'application/json' }
-                     })
-                     .success(function(data) {
-                         if (data.Success) {
-                             window.location.href = '/';
-                         }
-                     });
-             };
-         });
-
-         smsApp.controller('sendController', [
-             '$scope', '$http', '$location', 'accountDetailsFactory', function($scope, $http, $location, details) {
-                 $scope.accounts = [];
-
-                 $scope.message = {
-                     accountreference: '',
-                     from: '',
-                     to: '',
-                     body: ''
-                 };
-
-                 $scope.sendMessage = function() {
-                     $http.post('Send/Send', $scope.message)
-                         .success(function(data) {
-                             $location.path('/');
-                         });
-                 }
-
-                 details.success(function(data) {
-                     for (var i in data.Accounts) {
-                         $scope.accounts.push(data.Accounts[i]);
-                     }
-                     console.log(data);
-                 });
-             }
-         ]);
-
-         smsApp.controller('inboxController', [
-             '$scope', 'inboxService', function($scope, inbox) {
-                 inbox.then(function(data) {
-                     console.log(data);
-                     $scope.messages = data.data;
-                 });
-
-                 $scope.transformDate = function(dateString) {
-                     return new Date(dateString.substring(0, dateString.indexOf('.')) + dateString.substring(dateString.length - 1)).toLocaleString();
-                 };
-
-                 var inboxHub = $.connection.inboxHub;
-
-                 inboxHub.client.doStuff = function () {
-                     console.log("Do Stuff!!");
-                 };
-
-                 $.connection.hub.start().done(function () {
-                     inboxHub.server.send("Test");
-                 });
-             }
-         ]);
-
-         smsApp.factory("accountDetailsFactory", function($http) {
-             return $http.get('Account/Details', { cache: true });
-         });
-
-         smsApp.service('inboxService', function($http) {
-             return $http.get('Inbox/Messages');
-         });
-     </script>
  }
 
 <div ng-view id="view"></div>
