@@ -2,7 +2,7 @@
 
 module SmsApp {
     smsApp.controller('sendController', [
-        '$scope', '$http', '$location', 'accountDetailsFactory', function ($scope, $http, $location, details) {
+        '$scope', '$http', '$location', 'accountDetailsFactory', function($scope, $http, $location, details) {
             $scope.accounts = [];
 
             $scope.message = {
@@ -12,14 +12,14 @@ module SmsApp {
                 body: ''
             };
 
-            $scope.sendMessage = function () {
+            $scope.sendMessage = function() {
                 $http.post('Send/Send', $scope.message)
-                    .success(function (data) {
+                    .success(function(data) {
                         $location.path('/');
                     });
             }
 
-                details.success(function (data) {
+            details.success(function(data) {
                 for (var i in data.Accounts) {
                     $scope.accounts.push(data.Accounts[i]);
                 }

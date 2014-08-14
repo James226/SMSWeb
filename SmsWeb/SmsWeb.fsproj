@@ -123,6 +123,7 @@
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bg.jpg" />
     <Content Include="Content\bg2.jpg" />
+    <Content Include="Content\mail.png" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Scripts\bootstrap.js" />

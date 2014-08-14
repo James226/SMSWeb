@@ -2,11 +2,14 @@
 var SmsApp;
 (function (SmsApp) {
     var InboxService = (function () {
-        function InboxService($http) {
+        function InboxService($http, $location, $rootScope) {
             this.$http = $http;
+            this.inboxPromise = this.$http.get('Inbox/Messages').then(function (data) {
+                return data.data;
+            });
         }
         InboxService.prototype.getMessages = function () {
-            return this.$http.get('Inbox/Messages');
+            return this.inboxPromise;
         };
         return InboxService;
     })();
