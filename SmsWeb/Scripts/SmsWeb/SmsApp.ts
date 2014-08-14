@@ -9,7 +9,7 @@ module SmsApp {
         'inboxController': 50
     };
 
-    smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(($rootScope, $route) => {
+    smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(($rootScope, $route, inboxService) => {
         $rootScope.$on('$routeChangeStart', (event, next, current) => {
 
             if (current !== undefined) {

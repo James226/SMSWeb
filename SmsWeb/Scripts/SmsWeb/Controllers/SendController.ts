@@ -1,8 +1,8 @@
 ﻿/// <reference path="../SmsApp.ts"/>
 
 module SmsApp {
-    smsApp.controller('sendController', [
-        '$scope', '$http', '$location', 'accountDetailsFactory', function($scope, $http, $location, details) {
+    class SendController {
+        constructor($scope, $http, $location, details) {
             $scope.accounts = [];
 
             $scope.message = {
@@ -12,19 +12,24 @@ module SmsApp {
                 body: ''
             };
 
-            $scope.sendMessage = function() {
+            $scope.sendMessage = () => {
                 $http.post('Send/Send', $scope.message)
-                    .success(function(data) {
+                    .success(data => {
                         $location.path('/');
                     });
             }
 
-            details.success(function(data) {
+            details.success(data => {
                 for (var i in data.Accounts) {
+                    if ($scope.message.accountreference == '') {
+                        $scope.message.accountreference = data.Accounts[i].Reference;
+                        $scope.message.from = data.Accounts[i].Address;
+                    }
                     $scope.accounts.push(data.Accounts[i]);
                 }
-                console.log(data);
             });
         }
-    ]);
+    }
+
+    smsApp.controller('sendController', ['$scope', '$http', '$location', 'accountDetailsFactory', SendController]);
 }

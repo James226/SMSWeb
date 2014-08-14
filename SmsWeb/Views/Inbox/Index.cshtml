@@ -18,7 +18,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="message in messages">
+                <tr data-ng-repeat="message in messages | orderBy: '-ReceivedAt'">
                     <td>{{ transformDate(message.ReceivedAt) }}</td>
                     <td>{{ message.Summary }}</td>
                     <td>{{ message.From.PhoneNumber }}</td>
