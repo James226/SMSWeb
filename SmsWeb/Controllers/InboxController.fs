@@ -43,9 +43,23 @@ type InboxHub() =
     member x.Send(text) =
         printfn "Message Received: %s" text
 
-type TestController() =
-    inherit ApiControllerWithHub<InboxHub>()
+[<CLIMutable>]
+type InboundMessage = {
+    Id: string
+    MessageId: string
+    AccountId: string
+    MessageText: string
+    From: string
+    To: string
+} 
+
+type MessageReceivedController() =
+    inherit ApiControllerWithHub<InboxHub>() 
 
     member x.Get() =
         x.Hub.Clients.All?DoStuff()
         "Done2"
+
+    member x.Post(inboundMessage: InboundMessage) = 
+        x.Hub.Clients.All?MessageReceived(inboundMessage)
+        "Message Received"

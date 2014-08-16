@@ -12,9 +12,19 @@ interface Window {
 }
 
 module SmsApp {
+    export interface IInboundMessage {
+        Id: string;
+        MessageId: string;
+        AccountId: string;
+        MessageText: string;
+        From: string;
+        To: string;
+    }
+
     export interface IInboxHub extends HubConnection {
         client: {
             doStuff: () => void
+            messageReceived: (inboundMessage: IInboundMessage) => void
         }
 
         server: {

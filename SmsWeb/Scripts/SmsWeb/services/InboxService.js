@@ -7,9 +7,17 @@ var SmsApp;
             this.$http = $http;
             var inboxHub = $.connection.inboxHub;
 
-            inboxHub.client.doStuff = function () {
+            inboxHub.client.messageReceived = function (inboundMessage) {
                 if (_this.messages != null) {
-                    _this.messages.push({ "Id": "1d39f1f3-6d30-4e32-8b90-55b95a8b9e07", "Reference": "Drew", "Status": "Submitted", "LastStatusAt": null, "SubmittedAt": null, "ReceivedAt": new Date().toISOString(), "Type": "SMS", "To": { "PhoneNumber": "447786205137" }, "From": { "PhoneNumber": "447786205137" }, "Summary": "Inbox TEST / 2", "Body": "", "Direction": "Inbound", "Parts": "1", "Username": null });
+                    _this.messages.push({
+                        Id: inboundMessage.MessageId,
+                        Reference: inboundMessage.AccountId,
+                        ReceivedAt: new Date().toISOString(),
+                        To: { PhoneNumber: inboundMessage.To },
+                        From: { PhoneNumber: inboundMessage.From },
+                        Direction: "Inbound",
+                        Summary: inboundMessage.MessageText
+                    });
                     if (!$rootScope.$$phase)
                         $rootScope.$apply();
                 }
@@ -22,13 +30,13 @@ var SmsApp;
                             }
 
                             if (permission === "granted") {
-                                displayNotification();
+                                displayNotification(inboundMessage);
                             }
                         });
                     }
                 } else {
                     if (window.Notification.permission === "granted") {
-                        displayNotification();
+                        displayNotification(inboundMessage);
                     } else {
                         alert("A new message has been received");
                     }
@@ -39,9 +47,9 @@ var SmsApp;
                 inboxHub.server.send("Test");
             });
 
-            function displayNotification() {
+            function displayNotification(inboundMessage) {
                 var notification = new window.Notification("New Message Received", {
-                    body: 'Message Body....',
+                    body: inboundMessage.MessageText,
                     icon: '/Content/mail.png'
                 });
                 notification.onclick = function () {

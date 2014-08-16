@@ -8,9 +8,17 @@ module SmsApp {
         constructor(private $http: ng.IHttpService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService) {
             var inboxHub = $.connection.inboxHub;
 
-            inboxHub.client.doStuff = () => {
+            inboxHub.client.messageReceived = (inboundMessage: IInboundMessage) => {
                 if (this.messages != null) {
-                    this.messages.push({ "Id": "1d39f1f3-6d30-4e32-8b90-55b95a8b9e07", "Reference": "Drew", "Status": "Submitted", "LastStatusAt": null, "SubmittedAt": null, "ReceivedAt": new Date().toISOString(), "Type": "SMS", "To": { "PhoneNumber": "447786205137" }, "From": { "PhoneNumber": "447786205137" }, "Summary": "Inbox TEST / 2", "Body": "", "Direction": "Inbound", "Parts": "1", "Username": null });
+                    this.messages.push({
+                        Id: inboundMessage.MessageId,
+                        Reference: inboundMessage.AccountId,
+                        ReceivedAt: new Date().toISOString(),
+                        To: { PhoneNumber: inboundMessage.To },
+                        From: { PhoneNumber: inboundMessage.From },
+                        Direction: "Inbound",
+                        Summary: inboundMessage.MessageText
+                    });
                     if (!$rootScope.$$phase) $rootScope.$apply();
                 }
 
@@ -22,13 +30,13 @@ module SmsApp {
                             }
 
                             if (permission === "granted") {
-                                displayNotification();
+                                displayNotification(inboundMessage);
                             }
                         });
                     }
                 } else {
                     if (window.Notification.permission === "granted") {
-                        displayNotification();
+                        displayNotification(inboundMessage);
                     } else {
                         alert("A new message has been received");
                     }
@@ -40,9 +48,9 @@ module SmsApp {
             });
 
 
-            function displayNotification() {
+            function displayNotification(inboundMessage: IInboundMessage) {
                 var notification = new window.Notification("New Message Received", {
-                    body: 'Message Body....',
+                    body: inboundMessage.MessageText,
                     icon: '/Content/mail.png'
                 });
                 notification.onclick = () => {
