@@ -1,5 +1,7 @@
 namespace SmsWeb
 
+open Ninject
+open Ninject.Web.Mvc
 open System
 open System.Net.Http
 open System.Web
@@ -8,6 +10,7 @@ open System.Web.Mvc
 open System.Web.Routing
 open System.Web.Optimization
 open Microsoft.AspNet.SignalR
+
 
 type BundleConfig() =
     static member RegisterBundles (bundles:BundleCollection) =
@@ -35,8 +38,22 @@ type HttpRoute = {
     controller : string
     id : RouteParameter }
 
+type NinjectResolver(kernel:IKernel) =
+    let _kernel = kernel
+    interface System.Web.Http.Dependencies.IDependencyResolver with 
+        member this.BeginScope():Http.Dependencies.IDependencyScope = upcast this
+        member this.GetService(t) =
+            _kernel.TryGet(t)
+        member this.GetServices(t)=
+            _kernel.GetAll(t)
+        member this.Dispose() = ()
+
+
 type Global() =
     inherit System.Web.HttpApplication() 
+
+    static member CreateResolver(kernel) : System.Web.Http.Dependencies.IDependencyResolver = 
+        new NinjectResolver(kernel) :> System.Web.Http.Dependencies.IDependencyResolver
 
     static member RegisterWebApi(config: HttpConfiguration) =
         // Configure routing
@@ -51,7 +68,9 @@ type Global() =
         config.Formatters.XmlFormatter.UseXmlSerializer <- true
         config.Formatters.JsonFormatter.SerializerSettings.ContractResolver <- Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
 
-        // Additional Web API settings
+        let kernel = new StandardKernel();
+        kernel.Bind<int>().ToConstant(123456) |> ignore
+        config.DependencyResolver <- Global.CreateResolver kernel
 
     static member RegisterFilters(filters: GlobalFilterCollection) =
         filters.Add(new HandleErrorAttribute())
