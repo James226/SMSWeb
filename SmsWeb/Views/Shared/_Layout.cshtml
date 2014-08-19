@@ -7,6 +7,23 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <meta name="description" content="Sms Web App" />
+	<style>
+		* {
+			margin: 0;
+		}
+		html, body {
+			height: 100%;
+		}
+		.main {
+			min-height: 100%;
+			height: auto !important;
+			height: 100%;
+			margin: 0 auto -100px;
+		}
+		footer, .push {
+			height: 100px;
+		}
+	</style>
 </head>
 <body ng-controller="mainController">
     <div class="navbar navbar-inverse navbar-fixed-top">
@@ -31,6 +48,7 @@
     <div class="container body-content">
         <div id="main">
             @RenderBody()
+			<div class="push" />
         </div>
         <hr />
         <footer style="color: lightgray">
