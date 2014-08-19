@@ -465,6 +465,7 @@
     <Compile Include="Controllers\SendController.fs" />
     <Compile Include="Controllers\AccountController.fs" />
     <Compile Include="Controllers\InboxController.fs" />
+    <Compile Include="Hubs\OutboundHub.fs" />
     <Content Include="Views\Web.config" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Home\Home.cshtml" />

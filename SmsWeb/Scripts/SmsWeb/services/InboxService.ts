@@ -43,8 +43,13 @@ module SmsApp {
                 }
             };
 
+            $.connection.outboundHub.client.go = function (msg: string) {
+               // alert("Connected!");
+            }
+
             $.connection.hub.start().done(() => {
                 inboxHub.server.send("Test");
+                $.connection.outboundHub.server.sendMessage("Test");
             });
 
 

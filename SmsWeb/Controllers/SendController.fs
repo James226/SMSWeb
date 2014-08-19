@@ -127,10 +127,3 @@ type SendController(test: int) =
         with
         | :? System.Net.WebException -> return ContentResult(Content = "0") :> ActionResult
     }
-     
-     
-type TestController(test: int) =
-    inherit System.Web.Http.ApiController()
-
-    member x.Get() =
-        test

@@ -43,8 +43,13 @@ var SmsApp;
                 }
             };
 
+            $.connection.outboundHub.client.go = function (msg) {
+                // alert("Connected!");
+            };
+
             $.connection.hub.start().done(function () {
                 inboxHub.server.send("Test");
+                $.connection.outboundHub.server.sendMessage("Test");
             });
 
             function displayNotification(inboundMessage) {
