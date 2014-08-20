@@ -10,6 +10,10 @@ var SmsApp;
     };
 
     SmsApp.smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route, inboxService) {
+        inboxService.onStatusUpdate(function (status) {
+            return $rootScope.ConnectionStatus = status;
+        });
+
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
             if (current !== undefined) {
                 var pos = routes[next['$$route'].controller];

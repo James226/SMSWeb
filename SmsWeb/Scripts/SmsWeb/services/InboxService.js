@@ -5,8 +5,9 @@ var SmsApp;
         function InboxService($http, $location, $rootScope) {
             var _this = this;
             this.$http = $http;
+            this.connectionStatus = null;
             var inboxHub = $.connection.inboxHub;
-
+            var self = this;
             inboxHub.client.messageReceived = function (inboundMessage) {
                 if (_this.messages != null) {
                     _this.messages.push({
@@ -43,13 +44,13 @@ var SmsApp;
                 }
             };
 
-            $.connection.outboundHub.client.go = function (msg) {
-                // alert("Connected!");
+            $.connection.outboundHub.client.updateStatus = function (status) {
+                self.connectionStatus(status);
             };
 
             $.connection.hub.start().done(function () {
                 inboxHub.server.send("Test");
-                $.connection.outboundHub.server.sendMessage("Test");
+                $.connection.outboundHub.server.setMode(1, "", "");
             });
 
             function displayNotification(inboundMessage) {
@@ -74,6 +75,10 @@ var SmsApp;
                 });
             }
             return this.inboxPromise;
+        };
+
+        InboxService.prototype.onStatusUpdate = function (callback) {
+            this.connectionStatus = callback;
         };
         return InboxService;
     })();

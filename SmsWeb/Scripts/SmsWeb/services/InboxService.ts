@@ -4,10 +4,11 @@ module SmsApp {
     export class InboxService {
         private inboxPromise: any;
         private messages: any;
+        private connectionStatus: (status: Text) => void = null;
 
         constructor(private $http: ng.IHttpService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService) {
             var inboxHub = $.connection.inboxHub;
-
+            var self = this
             inboxHub.client.messageReceived = (inboundMessage: IInboundMessage) => {
                 if (this.messages != null) {
                     this.messages.push({
@@ -43,13 +44,13 @@ module SmsApp {
                 }
             };
 
-            $.connection.outboundHub.client.go = function (msg: string) {
-               // alert("Connected!");
+            $.connection.outboundHub.client.updateStatus = function (status: string) {
+                self.connectionStatus(status);
             }
 
             $.connection.hub.start().done(() => {
                 inboxHub.server.send("Test");
-                $.connection.outboundHub.server.sendMessage("Test");
+                $.connection.outboundHub.server.setMode(1, "", "");
             });
 
 
@@ -73,6 +74,10 @@ module SmsApp {
                     .then(() => this.messages);
             }
             return this.inboxPromise;
+        }
+
+        onStatusUpdate(callback: (status: Text) => void) {
+            this.connectionStatus = callback;
         }
     }
     smsApp.service('inboxService', InboxService);

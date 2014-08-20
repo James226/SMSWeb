@@ -611,6 +611,11 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\SmsWeb.Connections\SmsWeb.Connections.fsproj">
+      <Name>SmsWeb.Connections</Name>
+      <Project>{be3c679d-1fe8-4df7-a032-cc97c8ce769b}</Project>
+      <Private>True</Private>
+    </ProjectReference>
     <ProjectReference Include="..\SmsWeb.Models\SmsWeb.Models.fsproj">
       <Name>SmsWeb.Models</Name>
       <Project>{5ced446c-5ae3-4a98-b257-998ba2e2fa09}</Project>
