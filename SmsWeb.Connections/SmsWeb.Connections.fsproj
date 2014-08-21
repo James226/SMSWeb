@@ -55,9 +55,8 @@
   </ItemGroup>
   <ItemGroup>
     <Reference Include="JamaaTech.Smpp.Net.Client.v1.4">
-      <HintPath>..\packages\JamaaTech.Smpp.1.4.3\lib\JamaaTech.Smpp.Net.Client.v1.4.dll</HintPath>
+      <HintPath>JamaaTech.Smpp.Net.Client.v1.4.dll</HintPath>
     </Reference>
-    <Reference Include="JamaaTech.Smpp.Net.Client.v1.4" />
     <Reference Include="JamaaTech.Smpp.Net.Lib.v1.4">
       <HintPath>..\packages\JamaaTech.Smpp.1.4.3\lib\JamaaTech.Smpp.Net.Lib.v1.4.dll</HintPath>
       <Private>True</Private>

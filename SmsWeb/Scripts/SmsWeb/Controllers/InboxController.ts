@@ -3,10 +3,6 @@
 /// <reference path="../SmsApp.ts"/>
 /// <reference path="../services/InboxService.ts"/>
 
-interface SignalR {
-    inboxHub: SmsApp.IInboxHub;
-}
-
 interface Window {
     Notification: any;
 }
@@ -19,17 +15,6 @@ module SmsApp {
         MessageText: string;
         From: string;
         To: string;
-    }
-
-    export interface IInboxHub extends HubConnection {
-        client: {
-            doStuff: () => void
-            messageReceived: (inboundMessage: IInboundMessage) => void
-        }
-
-        server: {
-            send: (message: string) => void
-        }
     }
 
     interface IInboxScope extends ng.IScope {

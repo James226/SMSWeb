@@ -27,7 +27,7 @@ type SmppConnection(connectionId: string, username, password, status) =
 
     interface IConnection with
         member x.Dispose() =
-            "" |> ignore
+            smppClient.Dispose()
 
         member x.SendMessage(originator, recipient, message) =
             let submitSm = SubmitSm()

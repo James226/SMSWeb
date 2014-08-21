@@ -10,7 +10,10 @@ module SmsApp {
     };
 
     smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(($rootScope, $route, inboxService: InboxService) => {
-        inboxService.onStatusUpdate((status) => $rootScope.ConnectionStatus = status);
+        inboxService.onStatusUpdate((status) => {
+            $rootScope.ConnectionStatus = status;
+            if (!$rootScope.$$phase) $rootScope.$apply();
+        });
 
         $rootScope.$on('$routeChangeStart', (event, next, current) => {
 

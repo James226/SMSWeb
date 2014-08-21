@@ -1,4 +1,5 @@
 ﻿/// <reference path="../SmsApp.ts"/>
+
 var SmsApp;
 (function (SmsApp) {
     var InboxService = (function () {
@@ -45,12 +46,12 @@ var SmsApp;
             };
 
             $.connection.outboundHub.client.updateStatus = function (status) {
-                self.connectionStatus(status);
+                return self.connectionStatus(status);
             };
 
             $.connection.hub.start().done(function () {
-                inboxHub.server.send("Test");
-                $.connection.outboundHub.server.setMode(1, "james.parker", "Esendex321");
+                if ($location.path() != "/login")
+                    $.connection.outboundHub.server.setMode(1, "james.parker", "Esendex321");
             });
 
             function displayNotification(inboundMessage) {

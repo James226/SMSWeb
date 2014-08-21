@@ -1,10 +1,35 @@
 ﻿/// <reference path="../SmsApp.ts"/>
 
+interface SignalR {
+    inboxHub: SmsApp.IInboxHub;
+    outboundHub: SmsApp.IOutboundHub;
+}
+
 module SmsApp {
+    export interface IInboxHub extends HubConnection {
+        client: {
+            doStuff: () => void
+            messageReceived: (inboundMessage: IInboundMessage) => void
+        }
+
+        server: {
+            send: (message: string) => void
+        }
+    }
+    export interface IOutboundHub extends HubConnection {
+        client: {
+            updateStatus: (status: string) => void
+        }
+
+        server: {
+            setMode: (mode: number, username: string, password: string) => void
+        }
+    }
+
     export class InboxService {
         private inboxPromise: any;
         private messages: any;
-        private connectionStatus: (status: Text) => void = null;
+        private connectionStatus: (status: string) => void = null;
 
         constructor(private $http: ng.IHttpService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService) {
             var inboxHub = $.connection.inboxHub;
@@ -44,13 +69,11 @@ module SmsApp {
                 }
             };
 
-            $.connection.outboundHub.client.updateStatus = function (status: string) {
-                self.connectionStatus(status);
-            }
+            $.connection.outboundHub.client.updateStatus = (status) => self.connectionStatus(status);
 
             $.connection.hub.start().done(() => {
-                inboxHub.server.send("Test");
-                $.connection.outboundHub.server.setMode(1, "james.parker", "Esendex321");
+                if ($location.path() != "/login")
+                    $.connection.outboundHub.server.setMode(1, "james.parker", "Esendex321");
             });
 
 
@@ -76,7 +99,7 @@ module SmsApp {
             return this.inboxPromise;
         }
 
-        onStatusUpdate(callback: (status: Text) => void) {
+        onStatusUpdate(callback: (status: string) => void) {
             this.connectionStatus = callback;
         }
     }
