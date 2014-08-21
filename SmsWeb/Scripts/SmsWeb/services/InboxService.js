@@ -50,7 +50,7 @@ var SmsApp;
 
             $.connection.hub.start().done(function () {
                 inboxHub.server.send("Test");
-                $.connection.outboundHub.server.setMode(1, "", "");
+                $.connection.outboundHub.server.setMode(1, "james.parker", "Esendex321");
             });
 
             function displayNotification(inboundMessage) {
