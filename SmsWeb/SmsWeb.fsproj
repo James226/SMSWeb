@@ -452,6 +452,7 @@
     <TypeScriptCompile Include="Scripts\SmsWeb\controllers\InboxController.ts" />
     <TypeScriptCompile Include="Scripts\SmsWeb\factories\AccountDetailsFactory.ts" />
     <TypeScriptCompile Include="Scripts\SmsWeb\services\InboxService.ts" />
+    <None Include="Scripts\SmsWeb\services\SignalRService.ts" />
     <TypeScriptCompile Include="Scripts\SmsWeb\SmsApp.ts" />
     <TypeScriptCompile Include="Scripts\SmsWeb\Config.ts" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
