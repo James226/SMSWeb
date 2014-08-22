@@ -1,13 +1,13 @@
 ﻿/// <reference path="../SmsApp.ts"/>
-
+/// <reference path="SignalRService.ts"/>
 var SmsApp;
 (function (SmsApp) {
     var InboxService = (function () {
-        function InboxService($http, $location, $rootScope) {
+        function InboxService($http, $location, $rootScope, signalRService) {
             var _this = this;
             this.$http = $http;
             this.connectionStatus = null;
-            var inboxHub = $.connection.inboxHub;
+            var inboxHub = signalRService.inboxHub;
             var self = this;
             inboxHub.client.messageReceived = function (inboundMessage) {
                 if (_this.messages != null) {
@@ -45,14 +45,9 @@ var SmsApp;
                 }
             };
 
-            $.connection.outboundHub.client.updateStatus = function (status) {
+            signalRService.outboundHub.client.updateStatus = function (status) {
                 return self.connectionStatus(status);
             };
-
-            $.connection.hub.start().done(function () {
-                if ($location.path() != "/login")
-                    $.connection.outboundHub.server.setMode(1, "james.parker", "Esendex321");
-            });
 
             function displayNotification(inboundMessage) {
                 var notification = new window.Notification("New Message Received", {
@@ -84,6 +79,6 @@ var SmsApp;
         return InboxService;
     })();
     SmsApp.InboxService = InboxService;
-    SmsApp.smsApp.service('inboxService', InboxService);
+    SmsApp.smsApp.service('inboxService', ['$http', '$location', '$rootScope', 'signalRService', InboxService]);
 })(SmsApp || (SmsApp = {}));
 //# sourceMappingURL=InboxService.js.map

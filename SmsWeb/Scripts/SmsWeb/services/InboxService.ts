@@ -1,38 +1,14 @@
 ﻿/// <reference path="../SmsApp.ts"/>
-
-interface SignalR {
-    inboxHub: SmsApp.IInboxHub;
-    outboundHub: SmsApp.IOutboundHub;
-}
+/// <reference path="SignalRService.ts"/>
 
 module SmsApp {
-    export interface IInboxHub extends HubConnection {
-        client: {
-            doStuff: () => void
-            messageReceived: (inboundMessage: IInboundMessage) => void
-        }
-
-        server: {
-            send: (message: string) => void
-        }
-    }
-    export interface IOutboundHub extends HubConnection {
-        client: {
-            updateStatus: (status: string) => void
-        }
-
-        server: {
-            setMode: (mode: number, username: string, password: string) => void
-        }
-    }
-
     export class InboxService {
         private inboxPromise: any;
         private messages: any;
         private connectionStatus: (status: string) => void = null;
 
-        constructor(private $http: ng.IHttpService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService) {
-            var inboxHub = $.connection.inboxHub;
+        constructor(private $http: ng.IHttpService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, signalRService: SignalRService) {
+            var inboxHub = signalRService.inboxHub;
             var self = this;
             inboxHub.client.messageReceived = (inboundMessage: IInboundMessage) => {
                 if (this.messages != null) {
@@ -69,13 +45,7 @@ module SmsApp {
                 }
             };
 
-            $.connection.outboundHub.client.updateStatus = (status) => self.connectionStatus(status);
-
-            $.connection.hub.start().done(() => {
-                if ($location.path() != "/login")
-                    $.connection.outboundHub.server.setMode(1, "james.parker", "Esendex321");
-            });
-
+            signalRService.outboundHub.client.updateStatus = (status) => self.connectionStatus(status);
 
             function displayNotification(inboundMessage: IInboundMessage) {
                 var notification = new window.Notification("New Message Received", {
@@ -103,5 +73,5 @@ module SmsApp {
             this.connectionStatus = callback;
         }
     }
-    smsApp.service('inboxService', InboxService);
+    smsApp.service('inboxService', ['$http', '$location', '$rootScope', 'signalRService', InboxService]);
 }
