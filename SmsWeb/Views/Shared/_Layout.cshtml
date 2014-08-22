@@ -57,7 +57,9 @@
             <div class="container">
                 <hr />
                 <div style="float: right">
-                    {{$root.ConnectionStatus}}
+                    <button title="{{$root.ConnectionStatus}}" class="btn btn-default">
+                        <span class="glyphicon" ng-class="$root.ConnectionStatusIcon" />
+                    </button>
                 </div>
                 <p>© 2014 - James Parker</p>
             </div>

@@ -15,8 +15,9 @@ type OutboundHub() =
     let mutable connection : Map<string, IConnection> = Map.ofList([])
 
     override x.OnDisconnected(stopCalled) =
-        connection.[x.Context.ConnectionId].Dispose();
-        connection <- connection.Remove(x.Context.ConnectionId)
+        if connection.ContainsKey x.Context.ConnectionId then
+            connection.[x.Context.ConnectionId].Dispose();
+            connection <- connection.Remove(x.Context.ConnectionId)
         base.OnDisconnected(stopCalled)
 
     member x.SetMode(mode: ConnectionMode, username, password) : unit =

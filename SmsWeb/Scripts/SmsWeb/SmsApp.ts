@@ -12,6 +12,17 @@ module SmsApp {
     smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(($rootScope, $route, inboxService: InboxService) => {
         inboxService.onStatusUpdate((status) => {
             $rootScope.ConnectionStatus = status;
+            switch (status) {
+                case "Connected":
+                    $rootScope.ConnectionStatusIcon = 'glyphicon-ok';
+                    break;
+                case "Connecting":
+                    $rootScope.ConnectionStatusIcon = 'glyphicon-retweet';
+                    break;
+                case "Closed":
+                    $rootScope.ConnectionStatusIcon = 'glyphicon-remove';
+                    break;
+            }
             if (!$rootScope.$$phase) $rootScope.$apply();
         });
 
