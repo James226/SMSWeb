@@ -16,7 +16,7 @@ open Microsoft.AspNet.SignalR
 open SmsWeb.Models
 
 [<Authorize>]
-type InboxController(authService: SmsWeb.Controllers.IAuthenticationService) =
+type InboxController(authService: SmsWeb.Services.IAuthenticationService) =
     inherit AsyncWorkflowController()
 
     let GetBasicHeader(loginDetails) = 

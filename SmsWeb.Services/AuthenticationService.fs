@@ -1,4 +1,4 @@
-﻿namespace SmsWeb.Controllers
+﻿namespace SmsWeb.Services
 
 open SmsWeb.Models
 open System.Linq
@@ -19,6 +19,8 @@ type AuthenticationService() =
         |> System.Text.ASCIIEncoding.ASCII.GetBytes
         |> System.Convert.ToBase64String
         |> (fun s -> "Basic " + s)
+ 
+    let credentialsCache = CredentialsCache()
 
     interface IAuthenticationService with
         member x.Authenticate(credentials: LoginCredentials) = async {
@@ -26,6 +28,7 @@ type AuthenticationService() =
                 let auth = GetBasicHeader credentials
                 let! html = Http.AsyncRequestString("http://api.dev.esendex.com/v1.0/accounts", headers = [ Authorization auth ])
                 loggedInUsers <- credentials :: loggedInUsers
+                credentialsCache.Store(credentials)
                 FormsAuthentication.SetAuthCookie(credentials.Username, false);
                 return true
             with
@@ -33,4 +36,4 @@ type AuthenticationService() =
         }
 
         member x.GetCredentials(username: string) =
-            loggedInUsers.First(fun (u) -> u.Username = username);
+            credentialsCache.Retrieve(username)

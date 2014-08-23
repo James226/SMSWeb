@@ -18,6 +18,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SmsWeb.Connections", "SmsWe
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SmsWeb.Controllers", "SmsWeb.Controllers\SmsWeb.Controllers.fsproj", "{84F11A8A-6644-440E-A1EC-1B628D824880}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SmsWeb.Services", "SmsWeb.Services\SmsWeb.Services.fsproj", "{DBA0028B-5724-46BE-9C8A-7B769802FFE5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{84F11A8A-6644-440E-A1EC-1B628D824880}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{84F11A8A-6644-440E-A1EC-1B628D824880}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{84F11A8A-6644-440E-A1EC-1B628D824880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DBA0028B-5724-46BE-9C8A-7B769802FFE5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DBA0028B-5724-46BE-9C8A-7B769802FFE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DBA0028B-5724-46BE-9C8A-7B769802FFE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DBA0028B-5724-46BE-9C8A-7B769802FFE5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

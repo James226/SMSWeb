@@ -115,7 +115,7 @@
     </VisualStudio>
   </ProjectExtensions>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.fs" />
+    <Compile Include="App_Start\NinjectWebCommon.fs" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-theme.css" />
@@ -471,16 +471,15 @@
     <Content Include="Views\Inbox\Index.cshtml" />
     <Content Include="Views\Send\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
-    <Content Include="Web.config" />
+    <Compile Include="AssemblyInfo.fs" />
     <Content Include="Global.asax" />
     <Compile Include="Global.asax.fs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <None Include="packages.config" />
-    <Content Include="readme.txt" />
-    <None Include="sms-web.pubxml" />
     <Compile Include="Startup.fs" />
-    <Compile Include="App_Start\NinjectWebCommon.fs" />
+    <Content Include="Web.config" />
+    <None Include="sms-web.pubxml" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
@@ -619,6 +618,11 @@
     <ProjectReference Include="..\SmsWeb.Models\SmsWeb.Models.fsproj">
       <Name>SmsWeb.Models</Name>
       <Project>{5ced446c-5ae3-4a98-b257-998ba2e2fa09}</Project>
+      <Private>True</Private>
+    </ProjectReference>
+    <ProjectReference Include="..\SmsWeb.Services\SmsWeb.Services.fsproj">
+      <Name>SmsWeb.Services</Name>
+      <Project>{dba0028b-5724-46be-9c8a-7b769802ffe5}</Project>
       <Private>True</Private>
     </ProjectReference>
   </ItemGroup>

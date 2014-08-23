@@ -44,7 +44,7 @@ type AccountDetails = {
 }
 
 [<Authorize>]
-type AccountController(authService: SmsWeb.Controllers.IAuthenticationService) =
+type AccountController(authService: SmsWeb.Services.IAuthenticationService) =
     inherit AsyncWorkflowController()
 
     let GetBasicHeader(loginDetails) = 

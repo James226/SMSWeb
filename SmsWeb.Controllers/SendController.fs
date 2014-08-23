@@ -90,7 +90,7 @@ type MessageHeaders = {
 }
 
 [<Authorize>]
-type SendController(authService: SmsWeb.Controllers.IAuthenticationService) =
+type SendController(authService: SmsWeb.Services.IAuthenticationService) =
     inherit AsyncWorkflowController()
 
     let GetBasicHeader(loginDetails: LoginCredentials) = 

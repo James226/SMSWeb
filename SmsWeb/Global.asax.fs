@@ -10,7 +10,6 @@ open System.Web.Http
 open System.Web.Mvc
 open System.Web.Routing
 open System.Web.Optimization
-open Microsoft.AspNet.SignalR
 
 
 type BundleConfig() =
@@ -38,30 +37,6 @@ type Route = {
 type HttpRoute = {
     controller : string
     id : RouteParameter }
-
-type NinjectResolver(kernel:IKernel) =
-    let _kernel = kernel
-    interface System.Web.Http.Dependencies.IDependencyResolver with 
-        member this.BeginScope():Http.Dependencies.IDependencyScope = upcast this
-        member this.GetService(t) =
-            _kernel.TryGet(t)
-        member this.GetServices(t)=
-            _kernel.GetAll(t)
-        member this.Dispose() = ()
-
-type SignalRNinjectDependencyResolver(kernel: IKernel) =
-    inherit DefaultDependencyResolver()
-
-    override x.GetService(serviceType: Type) =
-        let o = kernel.TryGet(serviceType)
-        match o with
-        | null -> base.GetService(serviceType)
-        | _ -> o
-
-    override x.GetServices(serviceType: Type): System.Collections.Generic.IEnumerable<System.Object> =
-        kernel.GetAll(serviceType).Concat(base.GetServices(serviceType));
-
-
 
 type WebAPILoader() =
     inherit System.Web.Http.Dispatcher.DefaultAssembliesResolver()
@@ -98,7 +73,7 @@ type Global() =
 
         let kernel = new StandardKernel();
         kernel.Bind<int>().ToConstant(123456) |> ignore
-        kernel.Bind<SmsWeb.Controllers.IAuthenticationService>().To<SmsWeb.Controllers.AuthenticationService>() |> ignore
+        kernel.Bind<SmsWeb.Services.IAuthenticationService>().To<SmsWeb.Services.AuthenticationService>() |> ignore
         config.DependencyResolver <- Global.CreateResolver kernel
 
     static member RegisterFilters(filters: GlobalFilterCollection) =

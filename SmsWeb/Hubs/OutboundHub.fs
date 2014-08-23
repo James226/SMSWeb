@@ -11,7 +11,7 @@ type ConnectionMode =
     | SMPP = 1
 
 [<Authorize>]
-type OutboundHub(authService: SmsWeb.Controllers.IAuthenticationService) =
+type OutboundHub(authService: SmsWeb.Services.IAuthenticationService) =
     inherit Hub()
 
     let mutable connection : Map<string, IConnection> = Map.ofList([])

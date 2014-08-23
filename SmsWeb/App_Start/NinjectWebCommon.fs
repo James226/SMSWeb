@@ -1,10 +1,34 @@
 namespace SmsWeb
 
 open System;
+open System.Linq;
 open System.Web;
 open Microsoft.Web.Infrastructure.DynamicModuleHelper;
 open Ninject;
 open Ninject.Web.Common;
+open Microsoft.AspNet.SignalR
+
+type NinjectResolver(kernel:IKernel) =
+    let _kernel = kernel
+    interface System.Web.Http.Dependencies.IDependencyResolver with 
+        member this.BeginScope():Http.Dependencies.IDependencyScope = upcast this
+        member this.GetService(t) =
+            _kernel.TryGet(t)
+        member this.GetServices(t)=
+            _kernel.GetAll(t)
+        member this.Dispose() = ()
+
+type SignalRNinjectDependencyResolver(kernel: IKernel) =
+    inherit DefaultDependencyResolver()
+
+    override x.GetService(serviceType: Type) =
+        let o = kernel.TryGet(serviceType)
+        match o with
+        | null -> base.GetService(serviceType)
+        | _ -> o
+
+    override x.GetServices(serviceType: Type): System.Collections.Generic.IEnumerable<System.Object> =
+        kernel.GetAll(serviceType).Concat(base.GetServices(serviceType));
 
 type NinjectWebCommon() =
     static member bootstrapper = new Bootstrapper();
@@ -44,7 +68,7 @@ type NinjectWebCommon() =
     static member RegisterServices(kernel: IKernel) =
         System.Web.Http.GlobalConfiguration.Configuration.DependencyResolver <- new NinjectResolver(kernel)
         Microsoft.AspNet.SignalR.GlobalHost.DependencyResolver <- new SignalRNinjectDependencyResolver(kernel);
-        kernel.Bind<SmsWeb.Controllers.IAuthenticationService>().ToConstant(SmsWeb.Controllers.AuthenticationService())|> ignore
+        kernel.Bind<SmsWeb.Services.IAuthenticationService>().ToConstant(SmsWeb.Services.AuthenticationService())|> ignore
 
 
 module AssemblyAttributes =

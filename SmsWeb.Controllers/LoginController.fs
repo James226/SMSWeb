@@ -9,7 +9,7 @@ open System.Web.Mvc.Ajax
 open Newtonsoft.Json
 open SmsWeb.Models
 
-type LoginController(authService: SmsWeb.Controllers.IAuthenticationService) =
+type LoginController(authService: SmsWeb.Services.IAuthenticationService) =
     inherit AsyncWorkflowController()
 
     member x.Index() = 
