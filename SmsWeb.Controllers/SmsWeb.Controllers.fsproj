@@ -50,6 +50,7 @@
   <Import Project="$(FSharpTargetsPath)" />
   <ItemGroup>
     <None Include="packages.config" />
+    <Compile Include="AuthenticationService.fs" />
     <Compile Include="ApiControllerWithHub.fs" />
     <Compile Include="AsyncWorkflowController.fs" />
     <Compile Include="HomeController.fs" />

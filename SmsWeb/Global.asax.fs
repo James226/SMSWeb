@@ -3,6 +3,7 @@ namespace SmsWeb
 open Ninject
 open Ninject.Web.Mvc
 open System
+open System.Linq
 open System.Net.Http
 open System.Web
 open System.Web.Http
@@ -48,6 +49,19 @@ type NinjectResolver(kernel:IKernel) =
             _kernel.GetAll(t)
         member this.Dispose() = ()
 
+type SignalRNinjectDependencyResolver(kernel: IKernel) =
+    inherit DefaultDependencyResolver()
+
+    override x.GetService(serviceType: Type) =
+        let o = kernel.TryGet(serviceType)
+        match o with
+        | null -> base.GetService(serviceType)
+        | _ -> o
+
+    override x.GetServices(serviceType: Type): System.Collections.Generic.IEnumerable<System.Object> =
+        kernel.GetAll(serviceType).Concat(base.GetServices(serviceType));
+
+
 
 type WebAPILoader() =
     inherit System.Web.Http.Dispatcher.DefaultAssembliesResolver()
@@ -84,6 +98,7 @@ type Global() =
 
         let kernel = new StandardKernel();
         kernel.Bind<int>().ToConstant(123456) |> ignore
+        kernel.Bind<SmsWeb.Controllers.IAuthenticationService>().To<SmsWeb.Controllers.AuthenticationService>() |> ignore
         config.DependencyResolver <- Global.CreateResolver kernel
 
     static member RegisterFilters(filters: GlobalFilterCollection) =

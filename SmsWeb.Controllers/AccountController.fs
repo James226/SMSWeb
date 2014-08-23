@@ -43,7 +43,8 @@ type AccountDetails = {
     Accounts: Account[]
 }
 
-type AccountController() =
+[<Authorize>]
+type AccountController(authService: SmsWeb.Controllers.IAuthenticationService) =
     inherit AsyncWorkflowController()
 
     let GetBasicHeader(loginDetails) = 
@@ -59,19 +60,16 @@ type AccountController() =
         accountsSerializer.Deserialize stream :?> Accounts
 
     member x.Details() = async {
-        if HttpContext.Current.Session.["AuthenticationDetails"] <> null then
-            try
-                let credentials = HttpContext.Current.Session.["AuthenticationDetails"] :?> LoginCredentials
-                let auth = GetBasicHeader credentials
-                let! http = Http.AsyncRequestString("http://api.dev.esendex.com/v1.0/accounts", headers = [ Authorization auth ])
-                let accounts = 
-                    http
-                    |> DeserializeAccounts
-                    |> (fun accounts -> accounts.Account)
+        try
+            let credentials = authService.GetCredentials HttpContext.Current.User.Identity.Name
+            let auth = GetBasicHeader credentials
+            let! http = Http.AsyncRequestString("http://api.dev.esendex.com/v1.0/accounts", headers = [ Authorization auth ])
+            let accounts = 
+                http
+                |> DeserializeAccounts
+                |> (fun accounts -> accounts.Account)
 
-                return JsonResult(Data = { Success = true; Accounts = accounts }, JsonRequestBehavior = JsonRequestBehavior.AllowGet) :> ActionResult
-            with
-            | :? System.Net.WebException -> return JsonResult(Data = { Success = false; Accounts = [||] }, JsonRequestBehavior = JsonRequestBehavior.AllowGet) :> ActionResult
-        else
-            return JsonResult(Data = { Success = false; Accounts = [||] }, JsonRequestBehavior = JsonRequestBehavior.AllowGet) :> ActionResult
+            return JsonResult(Data = { Success = true; Accounts = accounts }, JsonRequestBehavior = JsonRequestBehavior.AllowGet) :> ActionResult
+        with
+        | :? System.Net.WebException -> return JsonResult(Data = { Success = false; Accounts = [||] }, JsonRequestBehavior = JsonRequestBehavior.AllowGet) :> ActionResult
     }

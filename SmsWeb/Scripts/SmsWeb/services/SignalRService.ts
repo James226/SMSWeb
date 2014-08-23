@@ -25,7 +25,7 @@ module SmsApp {
         }
 
         server: {
-            setMode: (mode: number, username: string, password: string) => void
+            setMode: (mode: number) => void
         }
     }
 
@@ -39,7 +39,7 @@ module SmsApp {
 
             $.connection.hub.start().done(() => {
                 if ($location.path() != "/login")
-                    $.connection.outboundHub.server.setMode(1, "james.parker", "Esendex321");
+                    $.connection.outboundHub.server.setMode(1);
             });
         }
     }

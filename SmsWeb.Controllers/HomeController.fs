@@ -14,7 +14,7 @@ type HomeController() =
         this.View()
 
     member this.Home() =
-        if HttpContext.Current.Session.["AuthenticationDetails"] <> null then
+        if HttpContext.Current.User.Identity.IsAuthenticated then
             this.View() :> ActionResult
         else
             ContentResult(Content = "<script>window.location.href = '/#/login';</script>") :> ActionResult

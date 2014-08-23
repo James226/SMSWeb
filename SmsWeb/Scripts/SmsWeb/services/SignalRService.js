@@ -11,7 +11,7 @@ var SmsApp;
 
             $.connection.hub.start().done(function () {
                 if ($location.path() != "/login")
-                    $.connection.outboundHub.server.setMode(1, "james.parker", "Esendex321");
+                    $.connection.outboundHub.server.setMode(1);
             });
         }
         return SignalRService;

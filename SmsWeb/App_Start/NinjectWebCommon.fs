@@ -43,6 +43,8 @@ type NinjectWebCommon() =
     /// <param name="kernel">The kernel.</param>
     static member RegisterServices(kernel: IKernel) =
         System.Web.Http.GlobalConfiguration.Configuration.DependencyResolver <- new NinjectResolver(kernel)
+        Microsoft.AspNet.SignalR.GlobalHost.DependencyResolver <- new SignalRNinjectDependencyResolver(kernel);
+        kernel.Bind<SmsWeb.Controllers.IAuthenticationService>().ToConstant(SmsWeb.Controllers.AuthenticationService())|> ignore
 
 
 module AssemblyAttributes =

@@ -12,7 +12,7 @@ module SmsApp {
         }
 
         sendMessage() {
-            this.outboundHub.client.sendMessage();
+            this.outboundHub.client.sendMessage("", "", "");
         }
 
         onStatusUpdate(callback: (status: string) => void) {

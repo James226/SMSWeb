@@ -13,7 +13,7 @@ var SmsApp;
             };
         }
         OutboundService.prototype.sendMessage = function () {
-            this.outboundHub.client.sendMessage();
+            this.outboundHub.client.sendMessage("", "", "");
         };
 
         OutboundService.prototype.onStatusUpdate = function (callback) {

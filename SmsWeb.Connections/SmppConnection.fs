@@ -3,13 +3,15 @@
 open JamaaTech.Smpp.Net.Client
 open JamaaTech.Smpp.Net.Lib
 open JamaaTech.Smpp.Net.Lib.Protocol
+
+open SmsWeb.Models
     
-type SmppConnection(connectionId: string, username, password, status) =
+type SmppConnection(connectionId: string, loginCredentials, status) =
     let smppClient = new SmppClient()
         
     let Init() =
-        smppClient.Properties.SystemID <- username
-        smppClient.Properties.Password <- password
+        smppClient.Properties.SystemID <- loginCredentials.Username
+        smppClient.Properties.Password <- loginCredentials.Password
         smppClient.Properties.Port <- 30134
         smppClient.Properties.Host <- "smpp.esendex.com"
         smppClient.Properties.SystemType <- ""

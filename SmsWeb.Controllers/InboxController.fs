@@ -15,7 +15,7 @@ open Newtonsoft.Json
 open Microsoft.AspNet.SignalR
 open SmsWeb.Models
 
-type InboxController() =
+type InboxController(authService: SmsWeb.Controllers.IAuthenticationService) =
     inherit AsyncWorkflowController()
 
     let GetBasicHeader(loginDetails) = 
@@ -27,8 +27,9 @@ type InboxController() =
     member x.Index() = 
         x.View()
 
+    [<Authorize>]
     member x.Messages() = async {                    
-        let credentials = HttpContext.Current.Session.["AuthenticationDetails"] :?> LoginCredentials
+        let credentials = authService.GetCredentials HttpContext.Current.User.Identity.Name
         let! http = Http.AsyncRequestStream("http://api.dev.esendex.com/v1.0/inbox/messages", headers = [ Authorization( GetBasicHeader(credentials)) ])
         let mdrSerializer = XmlSerializer(typeof<MessageHeaders>)
         let response = mdrSerializer.Deserialize http.ResponseStream :?> MessageHeaders

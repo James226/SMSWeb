@@ -89,7 +89,8 @@ type MessageHeaders = {
     MessageHeader: MessageHeader[]
 }
 
-type SendController() =
+[<Authorize>]
+type SendController(authService: SmsWeb.Controllers.IAuthenticationService) =
     inherit AsyncWorkflowController()
 
     let GetBasicHeader(loginDetails: LoginCredentials) = 
@@ -114,14 +115,11 @@ type SendController() =
         response.MessageHeader.[0].Id
 
     member this.Index() = 
-        if HttpContext.Current.Session.["AuthenticationDetails"] <> null then
-            this.View() :> ActionResult
-        else
-            ContentResult(Content = "<script>window.location.href = '/#/login';</script>") :> ActionResult
+        this.View() :> ActionResult
 
     member this.Send(message: SendMessage) = async {        
         try
-            let credentials = HttpContext.Current.Session.["AuthenticationDetails"] :?> LoginCredentials
+            let credentials = authService.GetCredentials HttpContext.Current.User.Identity.Name
             let id = SendSerializedMessage(credentials, SerializeMessage { AccountReference = message.AccountReference; Message = { To = message.To; From = message.From; Body = message.Body } })
             return ContentResult(Content = id) :> ActionResult
         with

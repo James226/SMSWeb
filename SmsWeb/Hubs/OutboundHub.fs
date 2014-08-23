@@ -2,15 +2,17 @@
 
 open Microsoft.FSharp.Collections
 open EkonBenefits.FSharp.Dynamic
+open Microsoft.AspNet.SignalR
+open System.Web
 open SmsWeb.Connections
 
 type ConnectionMode =
     | REST = 0
     | SMPP = 1
 
-
-type OutboundHub() =
-    inherit Microsoft.AspNet.SignalR.Hub()
+[<Authorize>]
+type OutboundHub(authService: SmsWeb.Controllers.IAuthenticationService) =
+    inherit Hub()
 
     let mutable connection : Map<string, IConnection> = Map.ofList([])
 
@@ -20,10 +22,11 @@ type OutboundHub() =
             connection <- connection.Remove(x.Context.ConnectionId)
         base.OnDisconnected(stopCalled)
 
-    member x.SetMode(mode: ConnectionMode, username, password) : unit =
+    member x.SetMode(mode: ConnectionMode) : unit =
+        let credentials: SmsWeb.Models.LoginCredentials = authService.GetCredentials x.Context.User.Identity.Name
         match mode with
         | ConnectionMode.REST -> "" |> ignore
-        | ConnectionMode.SMPP -> connection <- connection.Add((x.Context.ConnectionId, new SmppConnection(x.Context.ConnectionId, username, password, x.UpdateStatus) :> IConnection))
+        | ConnectionMode.SMPP -> connection <- connection.Add((x.Context.ConnectionId, new SmppConnection(x.Context.ConnectionId, credentials, x.UpdateStatus) :> IConnection))
         | _ -> "" |> ignore
 
     member x.UpdateStatus(connectionId: string, status) =
