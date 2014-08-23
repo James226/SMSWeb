@@ -45,8 +45,6 @@ module SmsApp {
                 }
             };
 
-            signalRService.outboundHub.client.updateStatus = (status) => self.connectionStatus(status);
-
             function displayNotification(inboundMessage: IInboundMessage) {
                 var notification = new window.Notification("New Message Received", {
                     body: inboundMessage.MessageText,
@@ -67,10 +65,6 @@ module SmsApp {
                     .then(() => this.messages);
             }
             return this.inboxPromise;
-        }
-
-        onStatusUpdate(callback: (status: string) => void) {
-            this.connectionStatus = callback;
         }
     }
     smsApp.service('inboxService', ['$http', '$location', '$rootScope', 'signalRService', InboxService]);

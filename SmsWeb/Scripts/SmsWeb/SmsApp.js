@@ -1,4 +1,5 @@
 ﻿/// <reference path="../typings/angularjs/angular.d.ts"/>
+/// <referencep path="services/OutboundService.ts"/>
 var SmsApp;
 (function (SmsApp) {
     SmsApp.smsApp;
@@ -9,8 +10,8 @@ var SmsApp;
         'inboxController': 50
     };
 
-    SmsApp.smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route, inboxService) {
-        inboxService.onStatusUpdate(function (status) {
+    SmsApp.smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route, inboxService, outboundService) {
+        outboundService.onStatusUpdate(function (status) {
             $rootScope.ConnectionStatus = status;
             switch (status) {
                 case "Connected":

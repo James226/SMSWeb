@@ -44,7 +44,6 @@ type NinjectWebCommon() =
     static member RegisterServices(kernel: IKernel) =
         System.Web.Http.GlobalConfiguration.Configuration.DependencyResolver <- new NinjectResolver(kernel)
 
-        kernel.Bind<int>().ToConstant(543) |> ignore
 
 module AssemblyAttributes =
     [<assembly: WebActivatorEx.PreApplicationStartMethod(typeof<NinjectWebCommon>, "Start")>]

@@ -45,10 +45,6 @@ var SmsApp;
                 }
             };
 
-            signalRService.outboundHub.client.updateStatus = function (status) {
-                return self.connectionStatus(status);
-            };
-
             function displayNotification(inboundMessage) {
                 var notification = new window.Notification("New Message Received", {
                     body: inboundMessage.MessageText,
@@ -71,10 +67,6 @@ var SmsApp;
                 });
             }
             return this.inboxPromise;
-        };
-
-        InboxService.prototype.onStatusUpdate = function (callback) {
-            this.connectionStatus = callback;
         };
         return InboxService;
     })();
