@@ -21,6 +21,7 @@ module SmsApp {
     export interface IOutboundHub extends HubConnection {
         client: {
             updateStatus: (status: string) => void
+            sendMessage: (originator: string, recipient: string, message: string) => void
         }
 
         server: {

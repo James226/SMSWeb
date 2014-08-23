@@ -14,15 +14,15 @@ open Microsoft.AspNet.SignalR
 
 type BundleConfig() =
     static member RegisterBundles (bundles:BundleCollection) =
-        bundles.Add(ScriptBundle("~/bundles/jquery").Include([|"~/Scripts/jquery-{version}.js"|]))
+        bundles.Add(ScriptBundle("~/bundles/jquery").Include([|"~/Scripts/Libraries/jquery-{version}.js"|]))
 
         // Use the development version of Modernizr to develop with and learn from. Then, when you're
         // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
-        bundles.Add(ScriptBundle("~/bundles/modernizr").Include([|"~/Scripts/modernizr-*"|]))
+        bundles.Add(ScriptBundle("~/bundles/modernizr").Include([|"~/Scripts/Libraries/modernizr-*"|]))
 
         bundles.Add(ScriptBundle("~/bundles/bootstrap").Include(
-                        "~/Scripts/bootstrap.js",
-                        "~/Scripts/respond.js"))
+                        "~/Scripts/Libraries/bootstrap.js",
+                        "~/Scripts/Libraries/respond.js"))
 
         bundles.Add(StyleBundle("~/Content/css").Include(
                         "~/Content/bootstrap.css",
@@ -49,6 +49,18 @@ type NinjectResolver(kernel:IKernel) =
         member this.Dispose() = ()
 
 
+type WebAPILoader() =
+    inherit System.Web.Http.Dispatcher.DefaultAssembliesResolver()
+        member x.GetAssemblies() : System.Collections.ICollection = 
+
+            let defaultAssemblies = base.GetAssemblies();
+            let assemblies = new System.Collections.Generic.List<System.Reflection.Assembly>(defaultAssemblies);
+            
+            let t = typeof<SmsWeb.Controllers.HomeController>;
+            let a = t.Assembly;
+            defaultAssemblies.Add(a);
+            assemblies :> System.Collections.ICollection;
+
 type Global() =
     inherit System.Web.HttpApplication() 
 
@@ -63,6 +75,8 @@ type Global() =
             "api/{controller}/{id}",
             { controller = "{controller}"; id = RouteParameter.Optional }
         ) |> ignore
+
+        config.Services.Replace(typeof<System.Web.Http.Dispatcher.IAssembliesResolver>, WebAPILoader());
 
         // Configure serialization
         config.Formatters.XmlFormatter.UseXmlSerializer <- true

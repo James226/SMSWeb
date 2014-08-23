@@ -2,7 +2,7 @@
 
 module SmsApp {
     class SendController {
-        constructor($scope, $http, $location, details) {
+        constructor($scope, $http, $location, details, outboundService) {
             $scope.accounts = [];
 
             $scope.message = {
@@ -13,10 +13,11 @@ module SmsApp {
             };
 
             $scope.sendMessage = () => {
-                $http.post('Send/Send', $scope.message)
-                    .success(data => {
-                        $location.path('/');
-                    });
+                //$http.post('Send/Send', $scope.message)
+                //    .success(data => {
+                //        $location.path('/');
+                //    });
+                outboundService.sendMessage($scope.message.from, $scope.message.to, $scope.message.body);
             }
 
             details.success(data => {
@@ -31,5 +32,5 @@ module SmsApp {
         }
     }
 
-    smsApp.controller('sendController', ['$scope', '$http', '$location', 'accountDetailsFactory', SendController]);
+    smsApp.controller('sendController', ['$scope', '$http', '$location', 'accountDetailsFactory', 'outboundService', SendController]);
 }

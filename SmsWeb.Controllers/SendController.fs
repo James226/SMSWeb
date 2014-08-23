@@ -89,7 +89,7 @@ type MessageHeaders = {
     MessageHeader: MessageHeader[]
 }
 
-type SendController(test: int) =
+type SendController() =
     inherit AsyncWorkflowController()
 
     let GetBasicHeader(loginDetails: LoginCredentials) = 
@@ -115,7 +115,7 @@ type SendController(test: int) =
 
     member this.Index() = 
         if HttpContext.Current.Session.["AuthenticationDetails"] <> null then
-            this.View(test) :> ActionResult
+            this.View() :> ActionResult
         else
             ContentResult(Content = "<script>window.location.href = '/#/login';</script>") :> ActionResult
 

@@ -6,12 +6,16 @@ var SmsApp;
             var _this = this;
             this.$http = $http;
             this.connectionStatus = null;
-            var outboundHub = signalRService.outboundHub;
+            this.outboundHub = signalRService.outboundHub;
 
             signalRService.outboundHub.client.updateStatus = function (status) {
                 return _this.connectionStatus(status);
             };
         }
+        OutboundService.prototype.sendMessage = function () {
+            this.outboundHub.client.sendMessage();
+        };
+
         OutboundService.prototype.onStatusUpdate = function (callback) {
             this.connectionStatus = callback;
         };

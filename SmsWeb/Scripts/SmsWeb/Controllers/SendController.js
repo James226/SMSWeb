@@ -2,7 +2,7 @@
 var SmsApp;
 (function (SmsApp) {
     var SendController = (function () {
-        function SendController($scope, $http, $location, details) {
+        function SendController($scope, $http, $location, details, outboundService) {
             $scope.accounts = [];
 
             $scope.message = {
@@ -13,9 +13,11 @@ var SmsApp;
             };
 
             $scope.sendMessage = function () {
-                $http.post('Send/Send', $scope.message).success(function (data) {
-                    $location.path('/');
-                });
+                //$http.post('Send/Send', $scope.message)
+                //    .success(data => {
+                //        $location.path('/');
+                //    });
+                outboundService.sendMessage($scope.message.from, $scope.message.to, $scope.message.body);
             };
 
             details.success(function (data) {
@@ -31,6 +33,6 @@ var SmsApp;
         return SendController;
     })();
 
-    SmsApp.smsApp.controller('sendController', ['$scope', '$http', '$location', 'accountDetailsFactory', SendController]);
+    SmsApp.smsApp.controller('sendController', ['$scope', '$http', '$location', 'accountDetailsFactory', 'outboundService', SendController]);
 })(SmsApp || (SmsApp = {}));
 //# sourceMappingURL=SendController.js.map
