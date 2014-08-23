@@ -13,8 +13,6 @@ type HomeController() =
     member this.Index () = 
         this.View()
 
+    [<Authorize>]
     member this.Home() =
-        if HttpContext.Current.User.Identity.IsAuthenticated then
-            this.View() :> ActionResult
-        else
-            ContentResult(Content = "<script>window.location.href = '/#/login';</script>") :> ActionResult
+        this.View() :> ActionResult

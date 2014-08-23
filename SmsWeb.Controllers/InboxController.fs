@@ -15,6 +15,7 @@ open Newtonsoft.Json
 open Microsoft.AspNet.SignalR
 open SmsWeb.Models
 
+[<Authorize>]
 type InboxController(authService: SmsWeb.Controllers.IAuthenticationService) =
     inherit AsyncWorkflowController()
 

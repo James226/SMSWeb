@@ -26,7 +26,6 @@ type AuthenticationService() =
                 let auth = GetBasicHeader credentials
                 let! html = Http.AsyncRequestString("http://api.dev.esendex.com/v1.0/accounts", headers = [ Authorization auth ])
                 loggedInUsers <- credentials :: loggedInUsers
-                HttpContext.Current.Session.["AuthenticationDetails"] <- credentials
                 FormsAuthentication.SetAuthCookie(credentials.Username, false);
                 return true
             with
