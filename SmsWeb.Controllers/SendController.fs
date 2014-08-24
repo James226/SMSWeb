@@ -119,7 +119,7 @@ type SendController(authService: SmsWeb.Services.IAuthenticationService) =
 
     member this.Send(message: SendMessage) = async {        
         try
-            let credentials = authService.GetCredentials HttpContext.Current.User.Identity.Name
+            let credentials = authService.GetCredentials()
             let id = SendSerializedMessage(credentials, SerializeMessage { AccountReference = message.AccountReference; Message = { To = message.To; From = message.From; Body = message.Body } })
             return ContentResult(Content = id) :> ActionResult
         with

@@ -8,7 +8,6 @@ open ServiceStack.Redis
 
 type CredentialsCache() =
     let redis = new RedisClient(ConfigurationManager.AppSettings.["redis.host"], System.Int32.Parse(ConfigurationManager.AppSettings.["redis.port"]), ConfigurationManager.AppSettings.["redis.key"])
-    do redis.FlushAll()
     let credentialsCache = redis.As<LoginCredentials>()
 
     member x.Store(credentials: LoginCredentials) =
@@ -17,3 +16,6 @@ type CredentialsCache() =
 
     member x.Retrieve(username: string) =
         credentialsCache.GetValue(username)
+
+    member x.Forget(username: string) =
+        credentialsCache.RemoveEntry(username) |> ignore

@@ -23,7 +23,7 @@ type OutboundHub(authService: SmsWeb.Services.IAuthenticationService) =
         base.OnDisconnected(stopCalled)
 
     member x.SetMode(mode: ConnectionMode) : unit =
-        let credentials: SmsWeb.Models.LoginCredentials = authService.GetCredentials x.Context.User.Identity.Name
+        let credentials: SmsWeb.Models.LoginCredentials = authService.GetCredentials()
         match mode with
         | ConnectionMode.REST -> "" |> ignore
         | ConnectionMode.SMPP -> connection <- connection.Add((x.Context.ConnectionId, new SmppConnection(x.Context.ConnectionId, credentials, x.UpdateStatus) :> IConnection))

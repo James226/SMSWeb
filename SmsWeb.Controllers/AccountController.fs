@@ -7,6 +7,7 @@ open System.IO
 open System.Web
 open System.Web.Mvc
 open System.Web.Mvc.Ajax
+open System.Web.Security
 open System.Xml.Serialization
 open FSharp.Data
 open FSharp.Data.HttpRequestHeaders
@@ -61,7 +62,7 @@ type AccountController(authService: SmsWeb.Services.IAuthenticationService) =
 
     member x.Details() = async {
         try
-            let credentials = authService.GetCredentials HttpContext.Current.User.Identity.Name
+            let credentials = authService.GetCredentials()
             let auth = GetBasicHeader credentials
             let! http = Http.AsyncRequestString("http://api.dev.esendex.com/v1.0/accounts", headers = [ Authorization auth ])
             let accounts = 
@@ -73,3 +74,7 @@ type AccountController(authService: SmsWeb.Services.IAuthenticationService) =
         with
         | :? System.Net.WebException -> return JsonResult(Data = { Success = false; Accounts = [||] }, JsonRequestBehavior = JsonRequestBehavior.AllowGet) :> ActionResult
     }
+
+    member x.Logout() =
+        authService.Logout()
+        x.RedirectToAction("Index", "Home")

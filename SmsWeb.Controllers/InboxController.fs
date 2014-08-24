@@ -25,12 +25,13 @@ type InboxController(authService: SmsWeb.Services.IAuthenticationService) =
         |> System.Convert.ToBase64String
         |> (fun s -> "Basic " + s)
 
+    [<Authorize>]
     member x.Index() = 
         x.View()
 
     [<Authorize>]
     member x.Messages() = async {                    
-        let credentials = authService.GetCredentials HttpContext.Current.User.Identity.Name
+        let credentials = authService.GetCredentials()
         let! http = Http.AsyncRequestStream("http://api.dev.esendex.com/v1.0/inbox/messages", headers = [ Authorization( GetBasicHeader(credentials)) ])
         let mdrSerializer = XmlSerializer(typeof<MessageHeaders>)
         let response = mdrSerializer.Deserialize http.ResponseStream :?> MessageHeaders

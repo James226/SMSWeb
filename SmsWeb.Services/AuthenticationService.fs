@@ -6,10 +6,12 @@ open FSharp.Data
 open FSharp.Data.HttpRequestHeaders
 open System.Web.Security
 open System.Web
+open System.Web.Security
 
 type IAuthenticationService =
     abstract member Authenticate : LoginCredentials -> Async<bool>
-    abstract member GetCredentials : string -> LoginCredentials
+    abstract member GetCredentials : unit -> LoginCredentials
+    abstract member Logout : unit -> unit
 
 type AuthenticationService() =
     let mutable loggedInUsers : LoginCredentials list = []
@@ -35,5 +37,10 @@ type AuthenticationService() =
             | :? System.Net.WebException -> return false
         }
 
-        member x.GetCredentials(username: string) =
-            credentialsCache.Retrieve(username)
+        member x.GetCredentials() =
+            credentialsCache.Retrieve(HttpContext.Current.User.Identity.Name)
+
+        member x.Logout() =
+            let username = HttpContext.Current.User.Identity.Name
+            credentialsCache.Forget(username)
+            FormsAuthentication.SignOut()

@@ -29,6 +29,16 @@
         <div class="wrapper">
             <div class="navbar navbar-inverse navbar-fixed-top">
                 <div class="container">
+                    @if (HttpContext.Current.User.Identity.IsAuthenticated)
+                    {
+                        <div style="float: right">
+                                <ul class="nav navbar-nav">
+                                    <li><a href="/Account/Logout">Logout</a></li>
+                                </ul>
+                        </div>
+                    }
+
+
                     <div class="navbar-header">
                         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
                             <span class="icon-bar"></span>
