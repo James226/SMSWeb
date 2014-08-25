@@ -9,15 +9,22 @@ module SmsApp {
             this.outboundHub = signalRService.outboundHub;
 
             signalRService.outboundHub.client.updateStatus = (status) => this.connectionStatus(status);
+            signalRService.outboundHub.client.messageDelivered = this.messageDelivered;
         }
 
-        sendMessage() {
-            this.outboundHub.client.sendMessage("", "", "");
+        sendMessage(originator: string, receipient: string, message: string) {
+            this.outboundHub.client.sendMessage(originator, receipient, message);
         }
 
         onStatusUpdate(callback: (status: string) => void) {
             this.connectionStatus = callback;
         }
+
+        messageDelivered(mesage) {
+
+        }
+
+        
     }
     smsApp.service('outboundService', ['$http', '$location', '$rootScope', 'signalRService', OutboundService]);
 }

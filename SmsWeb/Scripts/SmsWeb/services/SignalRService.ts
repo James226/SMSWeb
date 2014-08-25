@@ -22,6 +22,7 @@ module SmsApp {
         client: {
             updateStatus: (status: string) => void
             sendMessage: (originator: string, recipient: string, message: string) => void
+            messageDelivered: (message) => void
         }
 
         server: {

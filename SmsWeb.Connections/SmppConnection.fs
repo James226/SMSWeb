@@ -6,6 +6,15 @@ open JamaaTech.Smpp.Net.Lib.Protocol
 
 open SmsWeb.Models
     
+type SmsMessage = {
+    Originator: string;
+    Recipient: string;
+    MessageReference: int;
+    PartId: int;
+    PartCount: int;
+    Body: string
+}
+
 type SmppConnection(connectionId: string, loginCredentials, status) =
     let smppClient = new SmppClient()
         
@@ -27,6 +36,9 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
 
     do Init()
 
+    let MapTextMessageToSmsMessage(msg: TextMessage) =
+        { Originator = msg.SourceAddress; Recipient = msg.DestinationAddress; MessageReference = msg.SegmentID; PartId = msg.SequenceNumber; PartCount = msg.MessageCount; Body = msg.Text }
+
     interface IConnection with
         member x.Dispose() =
             smppClient.Dispose()
@@ -46,3 +58,18 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
 
             let response = smppClient.CustomSendPDU(submitSm) :?> SubmitSmResp
             response.MessageID
+
+    member x.MessageSent =
+        smppClient.MessageSent
+        |> Observable.map(fun args -> args.ShortMessage :?> TextMessage)
+        |> Observable.map MapTextMessageToSmsMessage
+
+    member x.MessageDelivered = 
+        smppClient.MessageDelivered
+        |> Observable.map(fun args -> args.ShortMessage :?> TextMessage)
+        |> Observable.map MapTextMessageToSmsMessage
+
+    member x.MessageReceived =
+        smppClient.MessageReceived
+        |> Observable.map(fun args -> args.ShortMessage :?> TextMessage)
+        |> Observable.map MapTextMessageToSmsMessage

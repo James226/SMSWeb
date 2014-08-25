@@ -11,13 +11,17 @@ var SmsApp;
             signalRService.outboundHub.client.updateStatus = function (status) {
                 return _this.connectionStatus(status);
             };
+            signalRService.outboundHub.client.messageDelivered = this.messageDelivered;
         }
-        OutboundService.prototype.sendMessage = function () {
-            this.outboundHub.client.sendMessage("", "", "");
+        OutboundService.prototype.sendMessage = function (originator, receipient, message) {
+            this.outboundHub.client.sendMessage(originator, receipient, message);
         };
 
         OutboundService.prototype.onStatusUpdate = function (callback) {
             this.connectionStatus = callback;
+        };
+
+        OutboundService.prototype.messageDelivered = function (mesage) {
         };
         return OutboundService;
     })();

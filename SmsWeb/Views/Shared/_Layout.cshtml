@@ -7,23 +7,6 @@
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <meta name="description" content="Sms Web App" />
-	<style>
-		* {
-			margin: 0;
-		}
-		html, body {
-			height: 100%;
-		}
-		.wrapper {
-			min-height: 100%;
-			height: auto !important;
-			height: 100%;
-			margin: 0 auto -100px;
-		}
-		footer, .push {
-			height: 100px;
-		}
-	</style>
 </head>
     <body ng-controller="mainController">
         <div class="wrapper">
@@ -65,10 +48,20 @@
         </div>
         <footer style="color: lightgray">
             <div class="container">
-                <hr />
+                <div style="position: relative">
+                    <div class="notification-area">
+                        <ul>
+                            <li>Working</li>
+                            <li>Testing</li>
+                        </ul>
+                    </div>
+                </div>
                 <div style="float: right">
                     <button title="{{$root.ConnectionStatus}}" class="btn btn-default">
                         <span class="glyphicon" ng-class="$root.ConnectionStatusIcon" />
+                    </button>
+                    <button class="btn btn-default">
+                        <span class="glyphicon glyphicon-cog" ng-class="{spinner: $root.ActionPending}" />
                     </button>
                 </div>
                 <p>© 2014 - James Parker</p>
