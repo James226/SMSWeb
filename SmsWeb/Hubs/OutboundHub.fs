@@ -14,7 +14,7 @@ type ConnectionMode =
 type OutboundHub(authService: SmsWeb.Services.IAuthenticationService) =
     inherit Hub()
 
-    let mutable connection : Map<string, IConnection> = Map.ofList([])
+    static let mutable connection : Map<string, IConnection> = Map.ofList([])
 
     let CreateSMPPConnection(connectionId, credentials, statusUpdate, client) =
         let smppConnection = new SmppConnection(connectionId, credentials, statusUpdate)
@@ -40,7 +40,7 @@ type OutboundHub(authService: SmsWeb.Services.IAuthenticationService) =
     member x.UpdateStatus(connectionId: string, status) =
         x.Clients.Client(connectionId)?UpdateStatus(status)
 
-    member x.SendMessage(originator: string, recipient: string, message: string) : unit =
-        let conn = connection.Item x.Context.ConnectionId
-        let messageId = conn.SendMessage(originator, recipient, message)
-        messageId |> ignore
+    member x.SendMessage(originator, recipient, message) =
+        match Map.tryFind x.Context.ConnectionId connection with 
+        | None -> ""
+        | Some connection -> connection.SendMessage(originator, recipient, message)

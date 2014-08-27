@@ -473,10 +473,10 @@
     <Content Include="Views\Send\Index.cshtml" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Compile Include="AssemblyInfo.fs" />
-    <Content Include="Global.asax" />
     <Compile Include="Global.asax.fs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Content Include="Global.asax" />
     <Compile Include="Startup.fs" />
     <Content Include="Web.config" />
     <None Include="sms-web.pubxml" />

@@ -21,12 +21,12 @@ module SmsApp {
     export interface IOutboundHub extends HubConnection {
         client: {
             updateStatus: (status: string) => void
-            sendMessage: (originator: string, recipient: string, message: string) => void
             messageDelivered: (message) => void
         }
 
         server: {
             setMode: (mode: number) => void
+            sendMessage: (originator: string, recipient: string, message: string) => any
         }
     }
 

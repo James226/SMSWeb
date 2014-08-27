@@ -13,7 +13,8 @@ module SmsApp {
         }
 
         sendMessage(originator: string, receipient: string, message: string) {
-            this.outboundHub.client.sendMessage(originator, receipient, message);
+            this.outboundHub.server.sendMessage(originator, receipient, message)
+                .then(messageId => console.log(messageId));
         }
 
         onStatusUpdate(callback: (status: string) => void) {

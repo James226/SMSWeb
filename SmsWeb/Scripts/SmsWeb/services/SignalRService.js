@@ -1,4 +1,4 @@
-﻿/// <reference path="../SmsApp.ts"/>
+/// <reference path="../SmsApp.ts"/>
 /// <reference path="../../typings/signalr/signalr.d.ts"/>
 /// <reference path="../controllers/InboxController.ts"/>
 

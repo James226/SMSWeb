@@ -14,7 +14,9 @@ var SmsApp;
             signalRService.outboundHub.client.messageDelivered = this.messageDelivered;
         }
         OutboundService.prototype.sendMessage = function (originator, receipient, message) {
-            this.outboundHub.client.sendMessage(originator, receipient, message);
+            this.outboundHub.server.sendMessage(originator, receipient, message).then(function (messageId) {
+                return console.log(messageId);
+            });
         };
 
         OutboundService.prototype.onStatusUpdate = function (callback) {
