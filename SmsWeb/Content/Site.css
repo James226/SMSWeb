@@ -35,22 +35,26 @@ footer, .push {
     border-width: 1px 1px 0 1px;
     border-style: solid;
     border-color: #080808;
-    display: none;
 }
 
 .notification-area ul {
     list-style: none;
     width: 250px;
     padding: 0;
+    margin: 0;
 }
 
 .notification-area ul li {
-    height: 50px;
     padding: 5px;
 }
 
 .notification-area ul li:nth-child(odd) {
     background-color: #666666;
+}
+
+.notification-area .status {
+    text-align: right;
+    margin: 0;
 }
         
 .spinner {

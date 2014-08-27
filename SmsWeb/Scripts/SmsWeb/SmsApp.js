@@ -10,7 +10,7 @@ var SmsApp;
         'inboxController': 50
     };
 
-    SmsApp.smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route, inboxService, outboundService) {
+    SmsApp.smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route, inboxService, outboundService, notificationService) {
         outboundService.onStatusUpdate(function (status) {
             $rootScope.ConnectionStatus = status;
             switch (status) {
@@ -27,6 +27,8 @@ var SmsApp;
             if (!$rootScope.$$phase)
                 $rootScope.$apply();
         });
+
+        $rootScope.Notifications = notificationService;
 
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
             if (current !== undefined) {

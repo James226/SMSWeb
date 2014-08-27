@@ -1,10 +1,32 @@
 ﻿/// <reference path="SignalRService.ts"/>
 var SmsApp;
 (function (SmsApp) {
+    var Notification = (function () {
+        function Notification() {
+        }
+        return Notification;
+    })();
+    SmsApp.Notification = Notification;
+    var NotificationService = (function () {
+        function NotificationService() {
+            this.open = false;
+            this.notifications = [];
+        }
+        NotificationService.prototype.toggle = function () {
+            this.open = !this.open;
+        };
+
+        NotificationService.prototype.hasNotifications = function () {
+            return this.notifications.length > 0;
+        };
+        return NotificationService;
+    })();
+    SmsApp.NotificationService = NotificationService;
+
     var OutboundService = (function () {
-        function OutboundService($http, $location, $rootScope, signalRService) {
+        function OutboundService(signalRService, notifications) {
             var _this = this;
-            this.$http = $http;
+            this.notifications = notifications;
             this.connectionStatus = null;
             this.outboundHub = signalRService.outboundHub;
 
@@ -14,8 +36,10 @@ var SmsApp;
             signalRService.outboundHub.client.messageDelivered = this.messageDelivered;
         }
         OutboundService.prototype.sendMessage = function (originator, receipient, message) {
+            var _this = this;
             this.outboundHub.server.sendMessage(originator, receipient, message).then(function (messageId) {
-                return console.log(messageId);
+                console.log(messageId);
+                _this.notifications.notifications.push({ title: originator + " -> " + receipient, status: "Submitted" });
             });
         };
 
@@ -28,6 +52,7 @@ var SmsApp;
         return OutboundService;
     })();
     SmsApp.OutboundService = OutboundService;
-    SmsApp.smsApp.service('outboundService', ['$http', '$location', '$rootScope', 'signalRService', OutboundService]);
+    SmsApp.smsApp.service('notificationService', [NotificationService]);
+    SmsApp.smsApp.service('outboundService', ['signalRService', 'notificationService', OutboundService]);
 })(SmsApp || (SmsApp = {}));
 //# sourceMappingURL=OutboundService.js.map

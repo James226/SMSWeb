@@ -60,6 +60,9 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
             let response = smppClient.CustomSendPDU(submitSm) :?> SubmitSmResp
             response.MessageID
 
+        member x.IsConnected() =
+            smppClient.ConnectionState = SmppConnectionState.Connected
+
     member x.MessageSent =
         smppClient.MessageSent
         |> Observable.map(fun args -> args.ShortMessage :?> TextMessage)

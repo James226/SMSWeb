@@ -49,10 +49,12 @@
         <footer style="color: lightgray">
             <div class="container">
                 <div style="position: relative">
-                    <div class="notification-area">
+                    <div class="notification-area" data-ng-show="$root.Notifications.open">
                         <ul>
-                            <li>Working</li>
-                            <li>Testing</li>
+                            <li data-ng-repeat="notification in $root.Notifications.notifications">
+                                {{ notification.title }}
+                                <div class="status">{{ notification.status }}</div>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -60,7 +62,7 @@
                     <button title="{{$root.ConnectionStatus}}" class="btn btn-default">
                         <span class="glyphicon" ng-class="$root.ConnectionStatusIcon" />
                     </button>
-                    <button class="btn btn-default">
+                    <button class="btn btn-default" data-ng-click="$root.Notifications.toggle()" data-ng-show="$root.Notifications.hasNotifications()">
                         <span class="glyphicon glyphicon-cog" ng-class="{spinner: $root.ActionPending}" />
                     </button>
                 </div>

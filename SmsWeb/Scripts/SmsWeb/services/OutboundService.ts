@@ -1,11 +1,33 @@
 ﻿/// <reference path="SignalRService.ts"/>
 
 module SmsApp {
+    export class Notification {
+        title: string;
+        status: string;
+    }
+    export class NotificationService {
+        notifications: Notification[];
+        open: boolean;
+
+        constructor() {
+            this.open = false;
+            this.notifications = [];
+        }
+
+        toggle() {
+            this.open = !this.open;
+        }
+
+        hasNotifications() {
+            return this.notifications.length > 0;
+        }
+    }
+
     export class OutboundService {
         private connectionStatus: (status: string) => void = null;
         private outboundHub: IOutboundHub;
 
-        constructor(private $http: ng.IHttpService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, signalRService: SignalRService) {
+        constructor(signalRService: SignalRService, private notifications: NotificationService) {
             this.outboundHub = signalRService.outboundHub;
 
             signalRService.outboundHub.client.updateStatus = (status) => this.connectionStatus(status);
@@ -14,7 +36,12 @@ module SmsApp {
 
         sendMessage(originator: string, receipient: string, message: string) {
             this.outboundHub.server.sendMessage(originator, receipient, message)
-                .then(messageId => console.log(messageId));
+                .then(messageId => {
+                    console.log(messageId);
+                    this.notifications.notifications.push({ title: originator + " -> " + receipient, status: "Submitted" });
+                });
+
+            
         }
 
         onStatusUpdate(callback: (status: string) => void) {
@@ -27,5 +54,6 @@ module SmsApp {
 
         
     }
-    smsApp.service('outboundService', ['$http', '$location', '$rootScope', 'signalRService', OutboundService]);
+    smsApp.service('notificationService', [NotificationService]);
+    smsApp.service('outboundService', ['signalRService', 'notificationService', OutboundService]);
 }
