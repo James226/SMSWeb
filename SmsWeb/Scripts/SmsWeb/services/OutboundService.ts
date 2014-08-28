@@ -48,8 +48,8 @@ module SmsApp {
             this.connectionStatus = callback;
         }
 
-        messageDelivered(mesage) {
-
+        messageDelivered(message) {
+            this.notifications.notifications.push({ title: message.Originator + " -> " + message.Recipient, status: Delivered });
         }
 
         

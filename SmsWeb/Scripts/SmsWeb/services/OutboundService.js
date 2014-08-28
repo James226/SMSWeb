@@ -47,7 +47,8 @@ var SmsApp;
             this.connectionStatus = callback;
         };
 
-        OutboundService.prototype.messageDelivered = function (mesage) {
+        OutboundService.prototype.messageDelivered = function (message) {
+            this.notifications.notifications.push({ title: message.Originator + " -> " + message.Recipient, status: Delivered });
         };
         return OutboundService;
     })();
