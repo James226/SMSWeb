@@ -24,7 +24,7 @@ type OutboundHub(authService: SmsWeb.Services.IAuthenticationService) =
 
         connection <- connection.Add((connectionId, smppConnection :> IConnection))
 
-    let someIf(pred : IConnection -> bool, option : IConnection option) : IConnection option =
+    let someIf pred option =
         match option with
         | None -> None
         | Some o -> if pred(o) then option else None
@@ -48,7 +48,7 @@ type OutboundHub(authService: SmsWeb.Services.IAuthenticationService) =
     member x.SendMessage(originator, recipient, message) =
         let connection : IConnection option =
             Map.tryFind x.Context.ConnectionId connection
-            |> (fun conn -> someIf ((fun c -> c.IsConnected()), conn))
+            |> someIf (fun c -> c.IsConnected())
         match connection with 
         | None -> "Failed"
         | Some connection -> connection.SendMessage(originator, recipient, message)
