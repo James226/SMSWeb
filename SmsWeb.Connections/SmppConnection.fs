@@ -6,14 +6,16 @@ open JamaaTech.Smpp.Net.Lib.Protocol
 open System.Linq
 
 open SmsWeb.Models
-    
+
 type SmsMessage = {
+    MessageId: string;
     Originator: string;
     Recipient: string;
+    Status: string;
     MessageReference: int;
     PartId: int;
     PartCount: int;
-    Body: string
+    Body: string;
 }
 
 type SmppConnection(connectionId: string, loginCredentials, status) =
@@ -37,8 +39,35 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
 
     do Init()
 
+    let ToStatus(status) =
+        match status with
+        | "REJECTD" -> "Rejected"
+        | "DELIVRD" -> "Delivered"
+        | "EXPIRED" -> "Expired"
+        | "DELETED" -> "Deleted"
+        | "UNDELIV" -> "Undeliverable"
+        | "ACCEPTD" -> "Accepted"
+        | _ -> status
+
     let MapTextMessageToSmsMessage(msg: TextMessage) =
-        { Originator = msg.SourceAddress; Recipient = msg.DestinationAddress; MessageReference = msg.SegmentID; PartId = msg.SequenceNumber; PartCount = msg.MessageCount; Body = msg.Text }
+        let parts = 
+            msg.Text.Split(' ')
+            |> Seq.map (fun parts -> parts.Split(':'))
+
+        let messageId =
+            parts
+            |> Seq.find (fun parts -> parts.[0] = "id")
+            |> Seq.skip 1
+            |> Seq.exactlyOne
+
+        let status =
+            parts
+            |> Seq.find (fun parts -> parts.[0] = "stat")
+            |> Seq.skip 1
+            |> Seq.exactlyOne
+            |> ToStatus
+
+        { MessageId = messageId; Originator = msg.SourceAddress; Recipient = msg.DestinationAddress; Status = status; MessageReference = msg.SegmentID; PartId = msg.SequenceNumber; PartCount = msg.MessageCount; Body = msg.Text }
 
     interface IConnection with
         member x.Dispose() =

@@ -28,6 +28,9 @@ module SmsApp {
         });
 
         $rootScope.Notifications = notificationService;
+        notificationService.notificationPulse = () => {
+            if (!$rootScope.$$phase) $rootScope.$apply();
+        };
 
         $rootScope.$on('$routeChangeStart', (event, next, current) => {
 
@@ -47,5 +50,17 @@ module SmsApp {
                 $('#main').removeClass('left-slide');
             }
         });
+    });
+
+    smsApp.directive('ngRightClick', function ($parse) {
+        return function (scope, element, attrs) {
+            var fn = $parse(attrs.ngRightClick);
+            element.bind('contextmenu', function (event) {
+                scope.$apply(function () {
+                    event.preventDefault();
+                    fn(scope, { $event: event });
+                });
+            });
+        };
     });
 }

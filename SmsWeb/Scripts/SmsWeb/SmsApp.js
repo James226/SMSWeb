@@ -29,6 +29,10 @@ var SmsApp;
         });
 
         $rootScope.Notifications = notificationService;
+        notificationService.notificationPulse = function () {
+            if (!$rootScope.$$phase)
+                $rootScope.$apply();
+        };
 
         $rootScope.$on('$routeChangeStart', function (event, next, current) {
             if (current !== undefined) {
@@ -47,6 +51,18 @@ var SmsApp;
                 $('#main').removeClass('left-slide');
             }
         });
+    });
+
+    SmsApp.smsApp.directive('ngRightClick', function ($parse) {
+        return function (scope, element, attrs) {
+            var fn = $parse(attrs.ngRightClick);
+            element.bind('contextmenu', function (event) {
+                scope.$apply(function () {
+                    event.preventDefault();
+                    fn(scope, { $event: event });
+                });
+            });
+        };
     });
 })(SmsApp || (SmsApp = {}));
 //# sourceMappingURL=SmsApp.js.map

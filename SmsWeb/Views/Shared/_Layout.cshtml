@@ -48,22 +48,30 @@
         </div>
         <footer style="color: lightgray">
             <div class="container">
-                <div style="position: relative">
+                <div style="position: relative;">
                     <div class="notification-area" data-ng-show="$root.Notifications.open">
                         <ul>
-                            <li data-ng-repeat="notification in $root.Notifications.notifications">
-                                {{ notification.title }}
-                                <div class="status">{{ notification.status }}</div>
+                            <li data-ng-repeat="notification in $root.Notifications.notifications" data-ng-right-click="$root.Notifications.removeNotification(notification)">
+                                {{ notification.originator }} <span class="glyphicon glyphicon-arrow-right"></span> {{ notification.recipient }}
+                                <div class="progress">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{notification.progress}}" aria-valuemin="0" aria-valuemax="100" data-ng-style="{'width': notification.progress + '%'}"style="text-align: center;" data-ng-class="notification.getNotificationClass()">
+                                        {{ notification.status }}
+                                    </div>
+                                </div>
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div>  
                 <div style="float: right">
                     <button title="{{$root.ConnectionStatus}}" class="btn btn-default">
                         <span class="glyphicon" ng-class="$root.ConnectionStatusIcon" />
                     </button>
-                    <button class="btn btn-default" data-ng-click="$root.Notifications.toggle()" data-ng-show="$root.Notifications.hasNotifications()">
-                        <span class="glyphicon glyphicon-cog" ng-class="{spinner: $root.ActionPending}" />
+                    <button class="btn btn-default" data-ng-click="$root.Notifications.toggle()" data-ng-show="$root.Notifications.hasNotifications()" style="position: relative;">
+                        <span class="glyphicon glyphicon-inbox" ng-class="{spinner: $root.ActionPending}">
+                        </span>
+                        <span style="position: absolute; bottom: 5px; right: 5px; background-color: red; border: 1px solid red; border-radius: 10px; font-size: 0.5em; color: white; width: 10px; height: 10px;">
+                            {{$root.Notifications.notifications.length}}
+                        </span>
                     </button>
                 </div>
                 <p>© 2014 - James Parker</p>

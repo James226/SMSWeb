@@ -2,12 +2,39 @@
 
 module SmsApp {
     export class Notification {
-        title: string;
+        id: string;
+        originator: string;
+        recipient: string;
         status: string;
+        progress: number;
+
+        constructor(id, originator, recipient, status, progress) {
+            this.id = id;
+            this.originator = originator;
+            this.recipient = recipient;
+            this.status = status;
+            this.progress = progress;
+        }
+
+        getNotificationClass() {
+            switch (this.status) {
+                case 'Accepted':
+                case 'Delivered':
+                    return 'progress-bar-success';
+
+                case 'Submitted':
+                    return 'progress-bar-info';
+
+                default:
+                    return 'progress-bar-danger';
+            }
+        }
     }
     export class NotificationService {
         notifications: Notification[];
         open: boolean;
+
+        notificationPulse: () => void;
 
         constructor() {
             this.open = false;
@@ -21,6 +48,30 @@ module SmsApp {
         hasNotifications() {
             return this.notifications.length > 0;
         }
+
+        addNotification(notification: Notification) {
+            for (var i in this.notifications) {
+                if (this.notifications[i].id == notification.id) {
+                    this.notifications[i].status = notification.status;
+                    this.notifications[i].progress = notification.progress;
+                    if (typeof (this.notificationPulse) !== 'undefined')
+                        this.notificationPulse();
+                    return;
+                }
+            }
+            this.notifications.push(notification);
+            if (typeof (this.notificationPulse) !== 'undefined')
+                this.notificationPulse();
+        }
+
+        removeNotification(notification: Notification) {
+            var index = this.notifications.indexOf(notification);
+            if (index != -1)
+                this.notifications.splice(index, 1);
+
+            if (this.notifications.length == 0)
+                this.open = false;
+        }
     }
 
     export class OutboundService {
@@ -31,28 +82,29 @@ module SmsApp {
             this.outboundHub = signalRService.outboundHub;
 
             signalRService.outboundHub.client.updateStatus = (status) => this.connectionStatus(status);
-            signalRService.outboundHub.client.messageDelivered = this.messageDelivered;
+            signalRService.outboundHub.client.messageSent = (message) => this.messageSent(message);
+            signalRService.outboundHub.client.messageDelivered = (message) => this.messageDelivered(message);
         }
 
         sendMessage(originator: string, receipient: string, message: string) {
             this.outboundHub.server.sendMessage(originator, receipient, message)
                 .then(messageId => {
                     console.log(messageId);
-                    this.notifications.notifications.push({ title: originator + " -> " + receipient, status: "Submitted" });
-                });
-
-            
+                    this.notifications.addNotification(new Notification(messageId, originator, receipient, "Submitted", 50));
+                });            
         }
 
         onStatusUpdate(callback: (status: string) => void) {
             this.connectionStatus = callback;
         }
 
-        messageDelivered(message) {
-            this.notifications.notifications.push({ title: message.Originator + " -> " + message.Recipient, status: Delivered });
+        messageSent(message) {
+            this.notifications.addNotification(new Notification(message.MessageId, message.Originator, message.Recipient, "Sent", 50));
         }
 
-        
+        messageDelivered(message) {
+            this.notifications.addNotification(new Notification(message.MessageId, message.Originator, message.Recipient, message.Status, 100));
+        }        
     }
     smsApp.service('notificationService', [NotificationService]);
     smsApp.service('outboundService', ['signalRService', 'notificationService', OutboundService]);

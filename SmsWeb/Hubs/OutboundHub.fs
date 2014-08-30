@@ -19,6 +19,9 @@ type OutboundHub(authService: SmsWeb.Services.IAuthenticationService) =
     let CreateSMPPConnection(connectionId, credentials, statusUpdate, client) =
         let smppConnection = new SmppConnection(connectionId, credentials, statusUpdate)
 
+        smppConnection.MessageSent
+        |> Observable.subscribe client?MessageSent |> ignore
+
         smppConnection.MessageDelivered
         |> Observable.subscribe client?MessageDelivered |> ignore
 
