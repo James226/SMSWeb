@@ -10,7 +10,7 @@ var SmsApp;
         'inboxController': 50
     };
 
-    SmsApp.smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route, inboxService, outboundService, notificationService) {
+    SmsApp.smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(function ($rootScope, $route, $templateCache, $http, inboxService, outboundService, notificationService) {
         outboundService.onStatusUpdate(function (status) {
             $rootScope.ConnectionStatus = status;
             switch (status) {
@@ -51,6 +51,13 @@ var SmsApp;
                 $('#main').removeClass('left-slide');
             }
         });
+
+        var url;
+        for (var i in $route.routes) {
+            if (url = $route.routes[i].templateUrl) {
+                $http.get(url, { cache: $templateCache });
+            }
+        }
     });
 
     SmsApp.smsApp.directive('ngRightClick', function ($parse) {

@@ -10,7 +10,7 @@ module SmsApp {
         'inboxController': 50
     };
 
-    smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(($rootScope, $route, inboxService: InboxService, outboundService: OutboundService, notificationService: NotificationService) => {
+    smsApp = angular.module('smsApp', ['ngRoute', 'ngAnimate']).run(($rootScope, $route, $templateCache, $http, inboxService: InboxService, outboundService: OutboundService, notificationService: NotificationService) => {
         outboundService.onStatusUpdate((status) => {
             $rootScope.ConnectionStatus = status;
             switch (status) {
@@ -50,6 +50,13 @@ module SmsApp {
                 $('#main').removeClass('left-slide');
             }
         });
+
+        var url;
+        for (var i in $route.routes) {
+            if (url = $route.routes[i].templateUrl) {
+                $http.get(url, { cache: $templateCache });
+            }
+        }
     });
 
     smsApp.directive('ngRightClick', function ($parse) {
