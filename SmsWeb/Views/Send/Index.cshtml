@@ -27,7 +27,8 @@
 
                 <div class="form-group">
                     <label for="body">Message</label>
-                    <textarea name="body" class="form-control" data-ng-model="message.body"></textarea>
+                    <textarea name="body" class="form-control" data-ng-model="message.body" maxlength="{{ 153 * 4 }}" style="height: 200px;"></textarea>
+                    <span>{{message.body.length}} ({{message.numParts()}} parts)</span>
                 </div>
 
                 <button type="submit" class="btn btn-success">

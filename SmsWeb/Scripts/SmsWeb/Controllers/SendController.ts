@@ -9,7 +9,13 @@ module SmsApp {
                 accountreference: '',
                 from: '',
                 to: '',
-                body: ''
+                body: '',
+
+                numParts: function () {
+                    if (this.body.length <= 160)
+                        return 1;
+                    return Math.ceil(this.body.length / 153);
+                }
             };
 
             $scope.sendMessage = () => {
@@ -30,6 +36,7 @@ module SmsApp {
                 }
             });
         }
+
     }
 
     smsApp.controller('sendController', ['$scope', '$http', '$location', 'accountDetailsFactory', 'outboundService', SendController]);

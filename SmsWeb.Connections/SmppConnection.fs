@@ -22,10 +22,10 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
     let smppClient = new SmppClient()
         
     let Init() =
-        smppClient.Properties.SystemID <- loginCredentials.Username.Split('@').First()
-        smppClient.Properties.Password <- loginCredentials.Password
-        smppClient.Properties.Port <- 30134
-        smppClient.Properties.Host <- "smppapi-01.dev.lab"
+        smppClient.Properties.SystemID <- "smppclient1" // loginCredentials.Username.Split('@').First()
+        smppClient.Properties.Password <- "password" // loginCredentials.Password
+        smppClient.Properties.Port <- 2775 // 30134
+        smppClient.Properties.Host <- "localhost"
         smppClient.Properties.SystemType <- ""
         smppClient.Properties.DefaultServiceType <- ""
 
