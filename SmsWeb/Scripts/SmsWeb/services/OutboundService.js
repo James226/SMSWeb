@@ -40,7 +40,7 @@ var SmsApp;
 
         NotificationService.prototype.addNotification = function (notification) {
             for (var i in this.notifications) {
-                if (this.notifications[i].id == notification.id) {
+                if (this.notifications[i].id.indexOf(notification.id) !== -1) {
                     this.notifications[i].status = notification.status;
                     this.notifications[i].progress = notification.progress;
                     if (typeof (this.notificationPulse) !== 'undefined')

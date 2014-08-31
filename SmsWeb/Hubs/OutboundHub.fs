@@ -53,5 +53,5 @@ type OutboundHub(authService: SmsWeb.Services.IAuthenticationService) =
             Map.tryFind x.Context.ConnectionId connection
             |> someIf (fun c -> c.IsConnected())
         match connection with 
-        | None -> "Failed"
+        | None -> Seq.singleton "Failed"
         | Some connection -> connection.SendMessage(originator, recipient, message)

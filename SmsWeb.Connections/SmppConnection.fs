@@ -20,7 +20,8 @@ type SmsMessage = {
 
 type SmppConnection(connectionId: string, loginCredentials, status) =
     let smppClient = new SmppClient()
-        
+    let mutable nextRef = 0
+
     let Init() =
         smppClient.Properties.SystemID <- "smppclient1" // loginCredentials.Username.Split('@').First()
         smppClient.Properties.Password <- "password" // loginCredentials.Password
@@ -69,25 +70,60 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
 
         { MessageId = messageId; Originator = msg.SourceAddress; Recipient = msg.DestinationAddress; Status = status; MessageReference = msg.SegmentID; PartId = msg.SequenceNumber; PartCount = msg.MessageCount; Body = msg.Text }
 
+    let rec SplitParts source part totalParts ref =
+        seq { 
+            if Seq.isEmpty source then () else
+            let segment = source |> Seq.truncate 153
+            let rest = source |> Seq.skip (Seq.length segment)
+            yield (Some(Udh(1, 1, ref)), System.String(segment.ToArray()))
+            yield! SplitParts rest (part + 1) totalParts ref
+        }
+
+    let NumParts(message: string) =
+        ((float)message.Length) / 153.0
+        |> System.Math.Ceiling
+
+    let GetNextRef() =
+        (System.Threading.Interlocked.Increment &nextRef) % 256
+
+    let GetMessageParts(message:string) =
+        if message.Length <= 160
+            then [(None, message)]
+            else List.ofSeq(SplitParts message 1 (NumParts message) (GetNextRef()))
+
+    let SendPart originator recipient part = 
+        let submitSm = SubmitSm()
+        submitSm.SourceAddress.Address <- originator
+        submitSm.DestinationAddress.Address <- recipient
+        submitSm.DestinationAddress.Npi <- NumberingPlanIndicator.ISDN
+        submitSm.DestinationAddress.Ton <- TypeOfNumber.International
+        submitSm.SourceAddress.Npi <- NumberingPlanIndicator.ISDN
+        submitSm.SourceAddress.Ton <- TypeOfNumber.International
+        submitSm.EsmClass <- EsmClass.Default
+        submitSm.RegisteredDelivery <- RegisteredDelivery.DeliveryReceipt
+        submitSm.ServiceType <- ""
+
+        match part with
+        | (Some udh, message) -> submitSm.SetMessageText(message, DataCoding.SMSCDefault, udh)
+        | (None, message) -> submitSm.SetMessageText(message, DataCoding.SMSCDefault)
+
+        let response = smppClient.CustomSendPDU(submitSm) :?> SubmitSmResp
+        response.MessageID
+
+    let rec SendParts originator recipient parts : seq<string> =
+        seq {
+            match parts with
+            | h :: t -> yield SendPart originator recipient h; yield! SendParts originator recipient t
+            | [] -> ()
+        }
+
     interface IConnection with
         member x.Dispose() =
             smppClient.Dispose()
 
-        member x.SendMessage(originator, recipient, message) =
-            let submitSm = SubmitSm()
-            submitSm.SourceAddress.Address <- originator
-            submitSm.DestinationAddress.Address <- recipient
-            submitSm.DestinationAddress.Npi <- NumberingPlanIndicator.ISDN
-            submitSm.DestinationAddress.Ton <- TypeOfNumber.International
-            submitSm.SourceAddress.Npi <- NumberingPlanIndicator.ISDN
-            submitSm.SourceAddress.Ton <- TypeOfNumber.International
-            submitSm.EsmClass <- EsmClass.Default
-            submitSm.RegisteredDelivery <- RegisteredDelivery.DeliveryReceipt
-            submitSm.ServiceType <- ""
-            submitSm.SetMessageText(message, DataCoding.SMSCDefault)
-
-            let response = smppClient.CustomSendPDU(submitSm) :?> SubmitSmResp
-            response.MessageID
+        member x.SendMessage(originator: string, recipient, message) =
+            GetMessageParts message
+            |> SendParts originator recipient
 
         member x.IsConnected() =
             smppClient.ConnectionState = SmppConnectionState.Connected
