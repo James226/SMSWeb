@@ -40,4 +40,3 @@ var SmsApp;
 
     SmsApp.smsApp.controller('sendController', ['$scope', '$http', '$location', 'accountDetailsFactory', 'outboundService', SendController]);
 })(SmsApp || (SmsApp = {}));
-//# sourceMappingURL=SendController.js.map

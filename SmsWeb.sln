@@ -20,6 +20,8 @@ Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SmsWeb.Controllers", "SmsWe
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SmsWeb.Services", "SmsWeb.Services\SmsWeb.Services.fsproj", "{DBA0028B-5724-46BE-9C8A-7B769802FFE5}"
 EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "SmsWeb.Tests", "SmsWeb.Tests\SmsWeb.Tests.fsproj", "{038944C1-1D17-4EE4-AA0A-3F53D4CCEB8C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -46,6 +48,10 @@ Global
 		{DBA0028B-5724-46BE-9C8A-7B769802FFE5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DBA0028B-5724-46BE-9C8A-7B769802FFE5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DBA0028B-5724-46BE-9C8A-7B769802FFE5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{038944C1-1D17-4EE4-AA0A-3F53D4CCEB8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{038944C1-1D17-4EE4-AA0A-3F53D4CCEB8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{038944C1-1D17-4EE4-AA0A-3F53D4CCEB8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{038944C1-1D17-4EE4-AA0A-3F53D4CCEB8C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

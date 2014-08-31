@@ -19,4 +19,3 @@ var SmsApp;
     SmsApp.SignalRService = SignalRService;
     SmsApp.smsApp.service('signalRService', SignalRService);
 })(SmsApp || (SmsApp = {}));
-//# sourceMappingURL=SignalRService.js.map

@@ -73,4 +73,3 @@ var SmsApp;
     SmsApp.InboxService = InboxService;
     SmsApp.smsApp.service('inboxService', ['$http', '$location', '$rootScope', 'signalRService', InboxService]);
 })(SmsApp || (SmsApp = {}));
-//# sourceMappingURL=InboxService.js.map

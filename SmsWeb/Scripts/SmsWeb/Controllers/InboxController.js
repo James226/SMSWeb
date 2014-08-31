@@ -20,4 +20,3 @@ var SmsApp;
 
     SmsApp.smsApp.controller('inboxController', ['$scope', '$location', '$rootScope', 'inboxService', InboxController]);
 })(SmsApp || (SmsApp = {}));
-//# sourceMappingURL=InboxController.js.map

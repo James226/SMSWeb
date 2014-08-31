@@ -17,4 +17,3 @@ var SmsApp;
         });
     });
 })(SmsApp || (SmsApp = {}));
-//# sourceMappingURL=Config.js.map

@@ -5,4 +5,3 @@ var SmsApp;
         return $http.get('Account/Details', { cache: true });
     });
 })(SmsApp || (SmsApp = {}));
-//# sourceMappingURL=AccountDetailsFactory.js.map

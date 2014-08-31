@@ -12,4 +12,3 @@ var SmsApp;
 
     SmsApp.smsApp.controller('mainController', HomeController);
 })(SmsApp || (SmsApp = {}));
-//# sourceMappingURL=HomeController.js.map
