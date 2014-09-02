@@ -72,7 +72,6 @@ type Global() =
         config.Formatters.JsonFormatter.SerializerSettings.ContractResolver <- Newtonsoft.Json.Serialization.CamelCasePropertyNamesContractResolver()
 
         let kernel = new StandardKernel();
-        kernel.Bind<int>().ToConstant(123456) |> ignore
         kernel.Bind<SmsWeb.Services.IAuthenticationService>().To<SmsWeb.Services.AuthenticationService>() |> ignore
         config.DependencyResolver <- Global.CreateResolver kernel
 

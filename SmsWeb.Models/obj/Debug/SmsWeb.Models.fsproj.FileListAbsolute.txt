@@ -5,13 +5,6 @@ C:\Users\James\Documents\Visual Studio 2013\Projects\SmsWeb\SmsWeb.Models\bin\De
 C:\Users\James\Documents\Visual Studio 2013\Projects\SmsWeb\SmsWeb.Models\bin\Debug\FSharp.Core.xml
 C:\Users\James\Documents\Visual Studio 2013\Projects\SmsWeb\SmsWeb.Models\obj\Debug\SmsWeb.Models.dll
 C:\Users\James\Documents\Visual Studio 2013\Projects\SmsWeb\SmsWeb.Models\obj\Debug\SmsWeb.Models.pdb
-C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\SmsWeb.Models.XML
-C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\SmsWeb.Models.dll
-C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\SmsWeb.Models.pdb
-C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\FSharp.Core.dll
-C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\FSharp.Core.xml
-C:\dev\_spikes\smsweb\SmsWeb.Models\obj\Debug\SmsWeb.Models.dll
-C:\dev\_spikes\smsweb\SmsWeb.Models\obj\Debug\SmsWeb.Models.pdb
 C:\git\SmsWeb\SmsWeb.Models\bin\Debug\SmsWeb.Models.XML
 C:\git\SmsWeb\SmsWeb.Models\bin\Debug\SmsWeb.Models.dll
 C:\git\SmsWeb\SmsWeb.Models\bin\Debug\SmsWeb.Models.pdb
@@ -19,3 +12,10 @@ C:\git\SmsWeb\SmsWeb.Models\bin\Debug\FSharp.Core.dll
 C:\git\SmsWeb\SmsWeb.Models\bin\Debug\FSharp.Core.xml
 C:\git\SmsWeb\SmsWeb.Models\obj\Debug\SmsWeb.Models.dll
 C:\git\SmsWeb\SmsWeb.Models\obj\Debug\SmsWeb.Models.pdb
+C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\SmsWeb.Models.XML
+C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\SmsWeb.Models.dll
+C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\SmsWeb.Models.pdb
+C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\FSharp.Core.dll
+C:\dev\_spikes\smsweb\SmsWeb.Models\bin\Debug\FSharp.Core.xml
+C:\dev\_spikes\smsweb\SmsWeb.Models\obj\Debug\SmsWeb.Models.dll
+C:\dev\_spikes\smsweb\SmsWeb.Models\obj\Debug\SmsWeb.Models.pdb

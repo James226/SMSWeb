@@ -23,10 +23,10 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
     let mutable nextRef = 0
 
     let Init() =
-        smppClient.Properties.SystemID <- "smppclient1" // loginCredentials.Username.Split('@').First()
-        smppClient.Properties.Password <- "password" // loginCredentials.Password
-        smppClient.Properties.Port <- 2775 // 30134
-        smppClient.Properties.Host <- "localhost"
+        smppClient.Properties.SystemID <- loginCredentials.Username.Split('@').First()
+        smppClient.Properties.Password <- loginCredentials.Password
+        smppClient.Properties.Port <- 30134
+        smppClient.Properties.Host <- "smppapi-01.dev.lab"
         smppClient.Properties.SystemType <- ""
         smppClient.Properties.DefaultServiceType <- ""
 
@@ -75,13 +75,16 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
             if Seq.isEmpty source then () else
             let segment = source |> Seq.truncate 153
             let rest = source |> Seq.skip (Seq.length segment)
-            yield (Some(Udh(1, 1, ref)), System.String(segment.ToArray()))
+            yield (Some(Udh(part, totalParts, ref)), System.String(segment.ToArray()))
             yield! SplitParts rest (part + 1) totalParts ref
         }
 
-    let NumParts(message: string) =
-        ((float)message.Length) / 153.0
-        |> System.Math.Ceiling
+    let NumParts(message: string) : int =
+        let numParts =
+            ((float)message.Length) / 153.0
+            |> System.Math.Ceiling
+
+        int(numParts)
 
     let GetNextRef() =
         (System.Threading.Interlocked.Increment &nextRef) % 256
@@ -99,13 +102,12 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
         submitSm.DestinationAddress.Ton <- TypeOfNumber.International
         submitSm.SourceAddress.Npi <- NumberingPlanIndicator.ISDN
         submitSm.SourceAddress.Ton <- TypeOfNumber.International
-        submitSm.EsmClass <- EsmClass.Default
         submitSm.RegisteredDelivery <- RegisteredDelivery.DeliveryReceipt
         submitSm.ServiceType <- ""
 
         match part with
-        | (Some udh, message) -> submitSm.SetMessageText(message, DataCoding.SMSCDefault, udh)
-        | (None, message) -> submitSm.SetMessageText(message, DataCoding.SMSCDefault)
+        | (Some udh, message) -> submitSm.EsmClass <- EsmClass.UdhiIndicator; submitSm.SetMessageText(message, DataCoding.SMSCDefault, udh)
+        | (None, message) -> submitSm.EsmClass <- EsmClass.Default; submitSm.SetMessageText(message, DataCoding.SMSCDefault)
 
         let response = smppClient.CustomSendPDU(submitSm) :?> SubmitSmResp
         response.MessageID
