@@ -26,7 +26,7 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
         smppClient.Properties.SystemID <- loginCredentials.Username.Split('@').First()
         smppClient.Properties.Password <- loginCredentials.Password
         smppClient.Properties.Port <- 30134
-        smppClient.Properties.Host <- "smppapi-01.dev.lab"
+        smppClient.Properties.Host <- "smpp.esendex.com"
         smppClient.Properties.SystemType <- ""
         smppClient.Properties.DefaultServiceType <- ""
 
