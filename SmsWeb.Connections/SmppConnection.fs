@@ -26,7 +26,7 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
         smppClient.Properties.SystemID <- loginCredentials.Username.Split('@').First()
         smppClient.Properties.Password <- loginCredentials.Password
         smppClient.Properties.Port <- 30134
-        smppClient.Properties.Host <- "smpp.esendex.com"
+        smppClient.Properties.Host <- "smppapi-01.dev.lab"
         smppClient.Properties.SystemType <- ""
         smppClient.Properties.DefaultServiceType <- ""
 
@@ -55,6 +55,12 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
             msg.Text.Split(' ')
             |> Seq.map (fun parts -> parts.Split(':'))
 
+        let text =
+            parts
+            |> Seq.find (fun parts -> parts.[0] = "text")
+            |> Seq.skip 1
+            |> Seq.exactlyOne
+
         let messageId =
             parts
             |> Seq.find (fun parts -> parts.[0] = "id")
@@ -75,7 +81,7 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
             if Seq.isEmpty source then () else
             let segment = source |> Seq.truncate 153
             let rest = source |> Seq.skip (Seq.length segment)
-            yield (Some(Udh(part, totalParts, ref)), System.String(segment.ToArray()))
+            yield (Some(Udh(ref, totalParts, part)), System.String(segment.ToArray()))
             yield! SplitParts rest (part + 1) totalParts ref
         }
 

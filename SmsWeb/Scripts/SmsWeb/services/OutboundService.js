@@ -40,7 +40,11 @@ var SmsApp;
 
         NotificationService.prototype.addNotification = function (notification) {
             for (var i in this.notifications) {
-                if (this.notifications[i].id.indexOf(notification.id) !== -1) {
+                var idFound = false;
+                for (var j in this.notifications[i].id)
+                    if (this.notifications[i].id[j].indexOf(notification.id) !== -1)
+                        idFound = true;
+                if (idFound) {
                     this.notifications[i].status = notification.status;
                     this.notifications[i].progress = notification.progress;
                     if (typeof (this.notificationPulse) !== 'undefined')
@@ -107,3 +111,4 @@ var SmsApp;
     SmsApp.smsApp.service('notificationService', [NotificationService]);
     SmsApp.smsApp.service('outboundService', ['signalRService', 'notificationService', OutboundService]);
 })(SmsApp || (SmsApp = {}));
+//# sourceMappingURL=OutboundService.js.map

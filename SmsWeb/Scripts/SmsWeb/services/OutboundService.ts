@@ -2,7 +2,7 @@
 
 module SmsApp {
     export class Notification {
-        id: string;
+        id: any;
         originator: string;
         recipient: string;
         status: string;
@@ -51,7 +51,11 @@ module SmsApp {
 
         addNotification(notification: Notification) {
             for (var i in this.notifications) {
-                if (this.notifications[i].id.indexOf(notification.id) !== -1) {
+                var idFound = false;
+                for (var j in this.notifications[i].id)
+                    if (this.notifications[i].id[j].indexOf(notification.id) !== -1)
+                        idFound = true;
+                if (idFound) {
                     this.notifications[i].status = notification.status;
                     this.notifications[i].progress = notification.progress;
                     if (typeof (this.notificationPulse) !== 'undefined')

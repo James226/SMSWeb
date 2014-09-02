@@ -481,6 +481,7 @@
     <Content Include="Web.config" />
     <None Include="sms-web.pubxml" />
     <None Include="packages.config" />
+    <None Include="Devlab.pubxml" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="Antlr3.Runtime">
