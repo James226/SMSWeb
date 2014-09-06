@@ -1,4 +1,4 @@
-@if "%SCM_TRACE_LEVEL%" NEQ "4" @echo off
+::@if "%SCM_TRACE_LEVEL%" NEQ "4" @echo off
 
 :: ----------------------
 :: KUDU Deployment Script
@@ -83,14 +83,14 @@ IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (
 IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 3. Building test project
-::echo Building test project
-::"%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\SmsWeb.Tests\SmsWeb.Tests.csproj" /nologo /verbosity:m /t:Build /p:Configuration=Release
-::IF !ERRORLEVEL! NEQ 0 goto error
+echo Building test project
+"%MSBUILD_PATH%" "%DEPLOYMENT_SOURCE%\SmsWeb.Tests\SmsWeb.Tests.fsproj" /nologo /verbosity:m /t:Build /p:Configuration=Release
+IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 4. Running tests
-::echo Running tests
-::vstest.console.exe "%DEPLOYMENT_SOURCE%\SmsWeb.Tests\bin\Release\SmsWeb.Tests.dll"
-::IF !ERRORLEVEL! NEQ 0 goto error
+echo Running tests
+vstest.console.exe "%DEPLOYMENT_SOURCE%\SmsWeb.Tests\bin\Release\SmsWeb.Tests.dll"
+IF !ERRORLEVEL! NEQ 0 goto error
 
 :: 5. KuduSync
 IF /I "%IN_PLACE_DEPLOYMENT%" NEQ "1" (

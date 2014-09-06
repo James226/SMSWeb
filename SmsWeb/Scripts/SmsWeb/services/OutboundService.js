@@ -111,4 +111,3 @@ var SmsApp;
     SmsApp.smsApp.service('notificationService', [NotificationService]);
     SmsApp.smsApp.service('outboundService', ['signalRService', 'notificationService', OutboundService]);
 })(SmsApp || (SmsApp = {}));
-//# sourceMappingURL=OutboundService.js.map
