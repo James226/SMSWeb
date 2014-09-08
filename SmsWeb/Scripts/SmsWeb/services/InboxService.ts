@@ -2,6 +2,17 @@
 /// <reference path="SignalRService.ts"/>
 
 module SmsApp {
+    class SmsMessage {
+        MessageId: string;
+        Originator: string;
+        Recipient: string;
+        Status: string;
+        MessageReference: number;
+        PartId: number;
+        PartCount: number;
+        Body: string;
+    }
+
     export class InboxService {
         private inboxPromise: any;
         private messages: any;
@@ -9,17 +20,17 @@ module SmsApp {
 
         constructor(private $http: ng.IHttpService, $location: ng.ILocationService, $rootScope: ng.IRootScopeService, signalRService: SignalRService) {
             var inboxHub = signalRService.inboxHub;
-            var self = this;
-            inboxHub.client.messageReceived = (inboundMessage: IInboundMessage) => {
-                if (this.messages != null) {
+            var outboundHub = signalRService.outboundHub;
+            outboundHub.client.messageReceived = (inboundMessage: SmsMessage) => {
+                if (typeof (this.messages) != "undefined") {
                     this.messages.push({
                         Id: inboundMessage.MessageId,
-                        Reference: inboundMessage.AccountId,
+                        Reference: inboundMessage.Recipient,
                         ReceivedAt: new Date().toISOString(),
-                        To: { PhoneNumber: inboundMessage.To },
-                        From: { PhoneNumber: inboundMessage.From },
+                        To: { PhoneNumber: inboundMessage.Recipient },
+                        From: { PhoneNumber: inboundMessage.Originator },
                         Direction: "Inbound",
-                        Summary: inboundMessage.MessageText
+                        Summary: inboundMessage.Body
                     });
                     if (!$rootScope.$$phase) $rootScope.$apply();
                 }
@@ -45,9 +56,9 @@ module SmsApp {
                 }
             };
 
-            function displayNotification(inboundMessage: IInboundMessage) {
-                var notification = new window.Notification("New Message Received", {
-                    body: inboundMessage.MessageText,
+            function displayNotification(inboundMessage: SmsMessage) {
+                var notification = new window.Notification(inboundMessage.Originator, {
+                    body: inboundMessage.Body,
                     icon: '/Content/mail.png'
                 });
                 notification.onclick = () => {
@@ -61,7 +72,7 @@ module SmsApp {
             if (this.inboxPromise == null) {
                 this.inboxPromise = this.$http
                     .get('Inbox/Messages')
-                    .then(data => this.messages = data.data)
+                    .then(data => this.messages = (data.data == "" ? [] : data.data))
                     .then(() => this.messages);
             }
             return this.inboxPromise;

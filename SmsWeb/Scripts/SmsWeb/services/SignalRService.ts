@@ -23,6 +23,7 @@ module SmsApp {
             updateStatus: (status: string) => void
             messageSent: (message) => void
             messageDelivered: (message) => void
+            messageReceived: (message) => void
         }
 
         server: {

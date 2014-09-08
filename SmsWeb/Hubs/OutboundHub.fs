@@ -25,6 +25,9 @@ type OutboundHub(authService: SmsWeb.Services.IAuthenticationService) =
         smppConnection.MessageDelivered
         |> Observable.subscribe client?MessageDelivered |> ignore
 
+        smppConnection.MessageReceived
+        |> Observable.subscribe client?MessageReceived |> ignore
+
         connection <- connection.Add((connectionId, smppConnection :> IConnection))
 
     let someIf pred option =

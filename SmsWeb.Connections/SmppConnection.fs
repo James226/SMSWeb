@@ -23,10 +23,10 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
     let mutable nextRef = 0
 
     let Init() =
-        smppClient.Properties.SystemID <- loginCredentials.Username.Split('@').First()
-        smppClient.Properties.Password <- loginCredentials.Password
+        smppClient.Properties.SystemID <- "smppclient1" //loginCredentials.Username.Split('@').First()
+        smppClient.Properties.Password <- "password" //loginCredentials.Password
         smppClient.Properties.Port <- 30134
-        smppClient.Properties.Host <- "smpp.esendex.com"
+        smppClient.Properties.Host <- "192.168.0.5"
         smppClient.Properties.SystemType <- ""
         smppClient.Properties.DefaultServiceType <- ""
 
@@ -55,12 +55,6 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
             msg.Text.Split(' ')
             |> Seq.map (fun parts -> parts.Split(':'))
 
-        let text =
-            parts
-            |> Seq.find (fun parts -> parts.[0] = "text")
-            |> Seq.skip 1
-            |> Seq.exactlyOne
-
         let messageId =
             parts
             |> Seq.find (fun parts -> parts.[0] = "id")
@@ -76,6 +70,9 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
 
         { MessageId = messageId; Originator = msg.SourceAddress; Recipient = msg.DestinationAddress; Status = status; MessageReference = msg.SegmentID; PartId = msg.SequenceNumber; PartCount = msg.MessageCount; Body = msg.Text }
 
+    let MapTextMessageToInboundMessage(msg: TextMessage) =
+        { MessageId = ""; Originator = msg.SourceAddress; Recipient = msg.DestinationAddress; Status = ""; MessageReference = msg.SegmentID; PartId = msg.SequenceNumber; PartCount = msg.MessageCount; Body = msg.Text }
+        
     let rec SplitParts source part totalParts ref =
         seq { 
             if Seq.isEmpty source then () else
@@ -149,4 +146,4 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
     member x.MessageReceived =
         smppClient.MessageReceived
         |> Observable.map(fun args -> args.ShortMessage :?> TextMessage)
-        |> Observable.map MapTextMessageToSmsMessage
+        |> Observable.map MapTextMessageToInboundMessage

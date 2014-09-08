@@ -2,23 +2,29 @@
 /// <reference path="SignalRService.ts"/>
 var SmsApp;
 (function (SmsApp) {
+    var SmsMessage = (function () {
+        function SmsMessage() {
+        }
+        return SmsMessage;
+    })();
+
     var InboxService = (function () {
         function InboxService($http, $location, $rootScope, signalRService) {
             var _this = this;
             this.$http = $http;
             this.connectionStatus = null;
             var inboxHub = signalRService.inboxHub;
-            var self = this;
-            inboxHub.client.messageReceived = function (inboundMessage) {
-                if (_this.messages != null) {
+            var outboundHub = signalRService.outboundHub;
+            outboundHub.client.messageReceived = function (inboundMessage) {
+                if (typeof (_this.messages) != "undefined") {
                     _this.messages.push({
                         Id: inboundMessage.MessageId,
-                        Reference: inboundMessage.AccountId,
+                        Reference: inboundMessage.Recipient,
                         ReceivedAt: new Date().toISOString(),
-                        To: { PhoneNumber: inboundMessage.To },
-                        From: { PhoneNumber: inboundMessage.From },
+                        To: { PhoneNumber: inboundMessage.Recipient },
+                        From: { PhoneNumber: inboundMessage.Originator },
                         Direction: "Inbound",
-                        Summary: inboundMessage.MessageText
+                        Summary: inboundMessage.Body
                     });
                     if (!$rootScope.$$phase)
                         $rootScope.$apply();
@@ -46,8 +52,8 @@ var SmsApp;
             };
 
             function displayNotification(inboundMessage) {
-                var notification = new window.Notification("New Message Received", {
-                    body: inboundMessage.MessageText,
+                var notification = new window.Notification(inboundMessage.Originator, {
+                    body: inboundMessage.Body,
                     icon: '/Content/mail.png'
                 });
                 notification.onclick = function () {
@@ -61,7 +67,7 @@ var SmsApp;
             var _this = this;
             if (this.inboxPromise == null) {
                 this.inboxPromise = this.$http.get('Inbox/Messages').then(function (data) {
-                    return _this.messages = data.data;
+                    return _this.messages = (data.data == "" ? [] : data.data);
                 }).then(function () {
                     return _this.messages;
                 });
@@ -73,3 +79,4 @@ var SmsApp;
     SmsApp.InboxService = InboxService;
     SmsApp.smsApp.service('inboxService', ['$http', '$location', '$rootScope', 'signalRService', InboxService]);
 })(SmsApp || (SmsApp = {}));
+//# sourceMappingURL=InboxService.js.map
