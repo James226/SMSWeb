@@ -42,7 +42,7 @@ var SmsApp;
             for (var i in this.notifications) {
                 var idFound = false;
                 for (var j in this.notifications[i].id)
-                    if (this.notifications[i].id[j].indexOf(notification.id) !== -1)
+                    if (notification.id.indexOf(this.notifications[i].id[j]) !== -1)
                         idFound = true;
                 if (idFound) {
                     this.notifications[i].status = notification.status;
@@ -53,6 +53,7 @@ var SmsApp;
                 }
             }
             this.notifications.push(notification);
+            this.open = true;
             if (typeof (this.notificationPulse) !== 'undefined')
                 this.notificationPulse();
         };
@@ -64,6 +65,11 @@ var SmsApp;
 
             if (this.notifications.length == 0)
                 this.open = false;
+        };
+
+        NotificationService.prototype.removeAll = function () {
+            this.notifications = [];
+            this.open = false;
         };
         return NotificationService;
     })();
@@ -89,8 +95,13 @@ var SmsApp;
         OutboundService.prototype.sendMessage = function (originator, receipient, message) {
             var _this = this;
             this.outboundHub.server.sendMessage(originator, receipient, message).then(function (messageId) {
-                console.log(messageId);
-                _this.notifications.addNotification(new Notification(messageId, originator, receipient, "Submitted", 50));
+                if (messageId == 'Failed') {
+                    _this.notifications.addNotification(new Notification(Math.random(), originator, receipient, "Failed", 100));
+                } else {
+                    for (var i in messageId)
+                        messageId[i] = parseInt("0x" + messageId[i]);
+                    _this.notifications.addNotification(new Notification(messageId, originator, receipient, "Submitted", 50));
+                }
             });
         };
 
@@ -111,3 +122,4 @@ var SmsApp;
     SmsApp.smsApp.service('notificationService', [NotificationService]);
     SmsApp.smsApp.service('outboundService', ['signalRService', 'notificationService', OutboundService]);
 })(SmsApp || (SmsApp = {}));
+//# sourceMappingURL=OutboundService.js.map

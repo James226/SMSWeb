@@ -54,14 +54,17 @@
                             <li data-ng-repeat="notification in $root.Notifications.notifications" data-ng-right-click="$root.Notifications.removeNotification(notification)">
                                 {{ notification.originator }} <span class="glyphicon glyphicon-arrow-right"></span> {{ notification.recipient }}
                                 <div class="progress">
-                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{notification.progress}}" aria-valuemin="0" aria-valuemax="100" data-ng-style="{'width': notification.progress + '%'}"style="text-align: center;" data-ng-class="notification.getNotificationClass()">
+                                    <div class="progress-bar" role="progressbar" aria-valuenow="{{notification.progress}}" aria-valuemin="0" aria-valuemax="100" data-ng-style="{'width': notification.progress + '%'}" style="text-align: center;" data-ng-class="notification.getNotificationClass()">
                                         {{ notification.status }}
                                     </div>
                                 </div>
                             </li>
                         </ul>
+                        <div style="text-align: right; padding-right: 5px;">
+                            <a data-ng-click="$root.Notifications.removeAll()" style="color: white; cursor: pointer;">Clear All</a>
+                        </div>
                     </div>
-                </div>  
+                </div>
                 <div style="float: right">
                     <button title="{{$root.ConnectionStatus}}" class="btn btn-default">
                         <span class="glyphicon" ng-class="$root.ConnectionStatusIcon" />

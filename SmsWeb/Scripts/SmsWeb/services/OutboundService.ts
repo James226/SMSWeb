@@ -53,7 +53,7 @@ module SmsApp {
             for (var i in this.notifications) {
                 var idFound = false;
                 for (var j in this.notifications[i].id)
-                    if (this.notifications[i].id[j].indexOf(notification.id) !== -1)
+                    if (notification.id.indexOf(this.notifications[i].id[j]) !== -1)
                         idFound = true;
                 if (idFound) {
                     this.notifications[i].status = notification.status;
@@ -64,6 +64,7 @@ module SmsApp {
                 }
             }
             this.notifications.push(notification);
+            this.open = true;
             if (typeof (this.notificationPulse) !== 'undefined')
                 this.notificationPulse();
         }
@@ -75,6 +76,11 @@ module SmsApp {
 
             if (this.notifications.length == 0)
                 this.open = false;
+        }
+
+        removeAll() {
+            this.notifications = [];
+            this.open = false;
         }
     }
 
@@ -93,8 +99,13 @@ module SmsApp {
         sendMessage(originator: string, receipient: string, message: string) {
             this.outboundHub.server.sendMessage(originator, receipient, message)
                 .then(messageId => {
-                    console.log(messageId);
-                    this.notifications.addNotification(new Notification(messageId, originator, receipient, "Submitted", 50));
+                    if (messageId == 'Failed') {
+                        this.notifications.addNotification(new Notification(Math.random(), originator, receipient, "Failed", 100));
+                    } else {
+                        for (var i in messageId)
+                            messageId[i] = parseInt("0x" + messageId[i]);
+                        this.notifications.addNotification(new Notification(messageId, originator, receipient, "Submitted", 50));
+                    }
                 });            
         }
 
