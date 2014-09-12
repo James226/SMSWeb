@@ -94,12 +94,13 @@ var SmsApp;
         }
         OutboundService.prototype.sendMessage = function (originator, receipient, message) {
             var _this = this;
-            this.outboundHub.server.sendMessage(originator, receipient, message).then(function (messageId) {
-                if (messageId == 'Failed') {
-                    _this.notifications.addNotification(new Notification(Math.random(), originator, receipient, "Failed", 100));
+            this.outboundHub.server.sendMessage(originator, receipient, message).then(function (response) {
+                if (response[0].Item2 != 'ESME_ROK') {
+                    _this.notifications.addNotification(new Notification([Math.random()], originator, receipient, response[0].Item2, 100));
                 } else {
-                    for (var i in messageId)
-                        messageId[i] = parseInt("0x" + messageId[i]);
+                    var messageId = [];
+                    for (var i in response)
+                        messageId[i] = parseInt("0x" + response[i].Item1);
                     _this.notifications.addNotification(new Notification(messageId, originator, receipient, "Submitted", 50));
                 }
             });

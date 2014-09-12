@@ -113,9 +113,9 @@ type SmppConnection(connectionId: string, loginCredentials, status) =
         | (None, message) -> submitSm.EsmClass <- EsmClass.Default; submitSm.SetMessageText(message, DataCoding.SMSCDefault)
 
         let response = smppClient.CustomSendPDU(submitSm) :?> SubmitSmResp
-        response.MessageID
+        (response.MessageID, response.Header.ErrorCode.ToString())
 
-    let rec SendParts originator recipient parts : seq<string> =
+    let rec SendParts originator recipient parts : seq<string * string> =
         seq {
             match parts with
             | h :: t -> yield SendPart originator recipient h; yield! SendParts originator recipient t

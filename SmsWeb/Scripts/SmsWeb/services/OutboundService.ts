@@ -98,12 +98,13 @@ module SmsApp {
 
         sendMessage(originator: string, receipient: string, message: string) {
             this.outboundHub.server.sendMessage(originator, receipient, message)
-                .then(messageId => {
-                    if (messageId == 'Failed') {
-                        this.notifications.addNotification(new Notification(Math.random(), originator, receipient, "Failed", 100));
+                .then(response => {
+                    if (response[0].Item2 != 'ESME_ROK') {
+                        this.notifications.addNotification(new Notification([Math.random()], originator, receipient, response[0].Item2, 100));
                     } else {
-                        for (var i in messageId)
-                            messageId[i] = parseInt("0x" + messageId[i]);
+                        var messageId = []
+                        for (var i in response)
+                            messageId[i] = parseInt("0x" + response[i].Item1);
                         this.notifications.addNotification(new Notification(messageId, originator, receipient, "Submitted", 50));
                     }
                 });            
